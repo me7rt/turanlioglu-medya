@@ -14,6 +14,8 @@ const reduce = root.classList.contains('no-motion');
 const fine = window.matchMedia('(pointer: fine)').matches;
 const EASE = 'power3.out';
 
+// Mert: animasyonlar biraz geç gelsin, öğe ekranın ortasına yaklaşınca başlasın.
+const REVEAL_START = 'top 72%';
 if (reduce) {
   root.classList.remove('anim');
 } else {
@@ -94,7 +96,7 @@ function reveals() {
     if (h.dataset.animated) return;
     gsap.fromTo(h.querySelectorAll(':scope > .w > .wi'), { yPercent: 115 }, {
       yPercent: 0, duration: 1, ease: 'expo.out', stagger: 0.05,
-      scrollTrigger: { trigger: h, start: 'top 88%', once: true },
+      scrollTrigger: { trigger: h, start: REVEAL_START, once: true },
       onComplete: () => h.style.setProperty('--rev', '1'),
     });
   });
@@ -102,14 +104,14 @@ function reveals() {
   gsap.utils.toArray<HTMLElement>('[data-reveal]').forEach((el) => {
     gsap.fromTo(el, { opacity: 0, y: 28, filter: 'blur(10px)' }, {
       opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.9, ease: EASE,
-      scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+      scrollTrigger: { trigger: el, start: REVEAL_START, once: true },
     });
   });
   // Gruplar: çocuklar sırayla
   gsap.utils.toArray<HTMLElement>('[data-stagger]').forEach((g) => {
     gsap.fromTo(g.children, { opacity: 0, y: 34, filter: 'blur(8px)' }, {
       opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.85, ease: EASE, stagger: 0.09,
-      scrollTrigger: { trigger: g, start: 'top 85%', once: true },
+      scrollTrigger: { trigger: g, start: REVEAL_START, once: true },
     });
   });
   // Görseller: perde açılır gibi (clip-path) + hafif zoom
@@ -117,9 +119,9 @@ function reveals() {
     const img = el.querySelector('img');
     gsap.fromTo(el, { clipPath: 'inset(18% 10% 18% 10% round 24px)' }, {
       clipPath: 'inset(0% 0% 0% 0% round 4px)', duration: 1.4, ease: 'expo.out',
-      scrollTrigger: { trigger: el, start: 'top 90%', once: true },
+      scrollTrigger: { trigger: el, start: REVEAL_START, once: true },
     });
-    if (img) gsap.fromTo(img, { scale: 1.25 }, { scale: 1, duration: 1.6, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 90%', once: true } });
+    if (img) gsap.fromTo(img, { scale: 1.25 }, { scale: 1, duration: 1.6, ease: 'expo.out', scrollTrigger: { trigger: el, start: REVEAL_START, once: true } });
   });
 }
 

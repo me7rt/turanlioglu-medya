@@ -18,7 +18,7 @@ const current = Astro.url.pathname;
         const href = url(item.href);
         return <a href={href} aria-current={current.startsWith(href) ? 'page' : undefined}>{item.label}</a>;
       })}
-      <a class="btn btn--turkuaz" href={url('/iletisim/')}>Ön görüşme planla</a>
+      <a class="btn btn--turkuaz" href={url('/iletisim/')}>Teklif al</a>
     </nav>
   </div>
 </header>
