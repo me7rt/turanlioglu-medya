@@ -14,9 +14,10 @@ interface Props {
   schema?: Record<string, unknown>[];
   crumbs?: Crumb[];
   noindex?: boolean;
+  top?: 'light' | 'dark' | 'turkuaz'; // sayfa girişinin rengi: sayfa yolu şeridi buna uyar
 }
 
-const { title, description, ogType = 'website', image, schema = [], crumbs = [], noindex = false } = Astro.props;
+const { title, description, ogType = 'website', image, schema = [], crumbs = [], noindex = false, top = 'light' } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 const ogImage = image || absUrl('/og-default.png');
 const fullTitle = title.includes(site.name) ? title : `${title} | ${site.name}`;
@@ -107,6 +108,7 @@ const robots = isPreview || noindex ? 'noindex, nofollow' : 'index, follow, max-
     <a class="skip" href="#icerik">İçeriğe geç</a>
     <Header />
     {crumbs.length > 0 && (
+      <div class:list={['crumbs-bar', `crumbs-bar--${top}`, top === 'dark' && 'on-dark']}>
       <nav class="crumbs wrap" aria-label="Sayfa yolu">
         <ol>
           <li><a href={url('/')}>Ana sayfa</a></li>
@@ -115,6 +117,7 @@ const robots = isPreview || noindex ? 'noindex, nofollow' : 'index, follow, max-
           ))}
         </ol>
       </nav>
+      </div>
     )}
     <main id="icerik">
       <slot />

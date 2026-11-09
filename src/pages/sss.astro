@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Faq from '../components/Faq.astro';
 import CtaBand from '../components/CtaBand.astro';
+import PageHero from '../components/PageHero.astro';
 import { faq, services } from '../data/site';
 // Genel sorular + her hizmetin soruları tek FAQPage'de
 const all = [...faq, ...services.flatMap((s) => s.faq)];
@@ -10,10 +11,10 @@ const all = [...faq, ...services.flatMap((s) => s.faq)];
   title="Sık sorulan sorular"
   description="Turanlıoğlu Medya ile çalışma süreci, hizmetler, fiyatlandırma ve sonuçlar hakkında en çok sorulan soruların kısa ve net cevapları."
   crumbs={[{ name: 'Sık sorulan sorular', path: '/sss/' }]}
+  top="turkuaz"
 >
-  <div class="wrap" style="padding-block:2rem 6rem;max-width:960px">
-    <h1>Sık sorulan sorular</h1>
-    <p class="lead">Aradığınız cevap burada yoksa bize doğrudan sorabilirsiniz.</p>
+  <PageHero tone="turkuaz" title="Sık sorulan sorular" lead="Aradığınız cevap burada yoksa bize doğrudan sorabilirsiniz." />
+  <div class="wrap" style="padding-block:clamp(3rem,6vw,6rem);max-width:960px">
     <Faq items={all} />
   </div>
   <CtaBand />

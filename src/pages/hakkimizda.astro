@@ -2,6 +2,8 @@
 import Base from '../layouts/Base.astro';
 import Img from '../components/Img.astro';
 import CtaBand from '../components/CtaBand.astro';
+import PageHero from '../components/PageHero.astro';
+import Badge from '../components/Badge.astro';
 import { site } from '../data/site';
 import { absUrl } from '../lib/url';
 
@@ -25,23 +27,29 @@ const schema = [{
   description="Turanlıoğlu Medya, Mert Turanlıoğlu tarafından kurulan İstanbul merkezli dijital ajanstır. Hikâyemiz, çalışma şeklimiz ve değerlerimiz."
   crumbs={[{ name: 'Hakkımızda', path: '/hakkimizda/' }]}
   schema={schema}
+  top="dark"
 >
+  <PageHero title="Hakkımızda" lead={site.description}>
+    <Badge slot="side" />
+  </PageHero>
   <div class="wrap about">
     <div>
-      <h1>Hakkımızda</h1>
-      <p class="lead" data-intro>{site.description}</p>
+      <p class="kicker">Kurucu</p>
       <h2 id="mert">Mert Turanlıoğlu</h2>
       <p>Turanlıoğlu Medya'nın kurucusu.</p>
       <p class="todo">[DOLDURULACAK: Mert'in hikâyesi — kaç yıldır bu işi yaptığı, hangi sektörlerle çalıştığı, neden bu ajansı kurduğu. E-E-A-T (deneyim, uzmanlık, otorite, güven) için en önemli bölüm.]</p>
       <h2>Nasıl bir ajansız?</h2>
       <p class="todo">[DOLDURULACAK: marka tonu için 3 sıfat ve her birinin işte nasıl göründüğü]</p>
     </div>
-    <div data-curtain><Img name="team" sizes="(min-width: 900px) 40vw, 100vw" ratio="4/5" /></div>
+    <div class="about-media blob" data-curtain><div class="arch"><Img name="team" sizes="(min-width: 900px) 40vw, 100vw" ratio="4/5" /></div></div>
   </div>
   <CtaBand />
 </Base>
 <style>
-  .about { display: grid; grid-template-columns: 1.3fr 1fr; gap: clamp(2rem, 6vw, 6rem); padding-block: 2rem 6rem; align-items: start; }
+  .about { display: grid; grid-template-columns: 1.3fr 1fr; gap: clamp(2rem, 6vw, 6rem); padding-block: clamp(4rem, 8vw, 7rem); align-items: start; }
+  .about-media { margin-top: clamp(-9rem, -4rem - 6vw, -5rem); position: relative; z-index: 1; max-width: 460px; }
+  .about > div:first-child h2:first-of-type { font-size: var(--fs-4); margin-top: 0; }
   .about h2 { font-size: var(--fs-2); margin-top: 2.5rem; }
+  @media (max-width: 820px) { .about-media { margin-top: 0; } }
   @media (max-width: 820px) { .about { grid-template-columns: 1fr; } }
 </style>

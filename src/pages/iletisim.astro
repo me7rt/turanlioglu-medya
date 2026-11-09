@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
 import { site, services } from '../data/site';
 import { url, absUrl } from '../lib/url';
 const schema = [{ '@context': 'https://schema.org', '@type': 'ContactPage', url: absUrl('/iletisim/'), about: { '@id': absUrl('/#kurum') } }];
@@ -9,11 +10,14 @@ const schema = [{ '@context': 'https://schema.org', '@type': 'ContactPage', url:
   description="Turanlıoğlu Medya ile ücretsiz ön görüşme planlayın. İşletmenizi ve hedefinizi dinleyip size özel bir yol haritası ve teklif hazırlayalım."
   crumbs={[{ name: 'İletişim', path: '/iletisim/' }]}
   schema={schema}
+  top="dark"
 >
+  <PageHero title="Ücretsiz ön görüşme planlayın" lead="Formu doldurun, size dönelim. İşletmenizi ve hedefinizi dinleyip size özel bir yol haritası çıkaralım.">
+    <p class="todo">[DOLDURULACAK: dönüş süresi, ör. bir iş günü]</p>
+  </PageHero>
   <div class="wrap contact">
-    <div>
-      <h1>Ücretsiz ön görüşme planlayın</h1>
-      <p class="lead">Formu doldurun, size dönelim. <span class="todo">[DOLDURULACAK: dönüş süresi, ör. bir iş günü]</span></p>
+    <div class="contact-info">
+      <p class="kicker">Doğrudan ulaşın</p>
       <dl class="contact-list">
         <dt>E-posta</dt><dd class="todo">{site.email}</dd>
         <dt>Telefon</dt><dd class="todo">{site.phone}</dd>
@@ -58,11 +62,14 @@ const schema = [{ '@context': 'https://schema.org', '@type': 'ContactPage', url:
   });
 </script>
 <style>
-  .contact { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(2rem, 6vw, 6rem); padding-block: 2rem 6rem; }
+  .contact { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(2rem, 6vw, 6rem); padding-block: 0 6rem; }
+  .contact-info { padding-top: clamp(3rem, 5vw, 5rem); }
+  .contact-list dd { font-family: var(--font-display); font-size: var(--fs-2); font-weight: 600; letter-spacing: -0.02em; }
+  .contact-list dt { padding-top: 0.5rem; }
   .contact-list { display: grid; grid-template-columns: auto 1fr; gap: 0.75rem 1.5rem; margin-top: 2rem; }
   .contact-list dt { font-weight: 600; }
   .contact-list dd { margin: 0; }
-  .form { display: grid; gap: 1.25rem; background: var(--beyaz); padding: clamp(1.5rem, 3vw, 2.5rem); border-radius: var(--radius); border-top: 6px solid var(--turkuaz); }
+  .form { display: grid; gap: 1.25rem; background: var(--beyaz); padding: clamp(1.5rem, 3vw, 2.75rem); border-radius: 18px; border-top: 6px solid var(--turkuaz); margin-top: clamp(-8rem, -3rem - 5vw, -3rem); position: relative; z-index: 1; box-shadow: 0 30px 70px -30px rgb(6 42 45 / 0.45); }
   .form label { display: grid; gap: 0.4rem; font-weight: 600; }
   .form input:not([type=checkbox]), .form textarea {
     font: inherit; font-weight: 400; padding: 0.8rem 0.9rem; border: 1.5px solid #8aa3a1; border-radius: var(--radius); background: var(--kagit); color: var(--petrol); min-height: 48px;
@@ -80,5 +87,5 @@ const schema = [{ '@context': 'https://schema.org', '@type': 'ContactPage', url:
   .consent input { width: 22px; height: 22px; margin-top: 0.15rem; flex: none; accent-color: var(--petrol); }
   .form-note { margin: 0; font-size: 0.9rem; background: #fff3b0; padding: 0.5rem 0.75rem; border-radius: 3px; }
   .form-status { margin: 0; font-weight: 600; }
-  @media (max-width: 820px) { .contact { grid-template-columns: 1fr; } }
+  @media (max-width: 820px) { .contact { grid-template-columns: 1fr; } .form { order: -1; } .contact-info { padding-top: 0; } }
 </style>

@@ -4,6 +4,8 @@ import Img from '../components/Img.astro';
 import HeroSignal from '../components/HeroSignal.astro';
 import Faq from '../components/Faq.astro';
 import CtaBand from '../components/CtaBand.astro';
+import Arcs from '../components/Arcs.astro';
+import Badge from '../components/Badge.astro';
 import { site, services, faq, process } from '../data/site';
 import { url } from '../lib/url';
 import { imgSrc } from '../data/images';
@@ -18,6 +20,8 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   description="Turanlıoğlu Medya; sosyal medya yönetimi, web tasarım, dijital reklam, içerik üretimi ve SEO/GEO hizmetleri sunan İstanbul merkezli dijital ajanstır."
 >
   <section class="hero" data-hero aria-labelledby="hero-baslik">
+    <div class="hero-glow" aria-hidden="true"></div>
+    <Arcs class="hero-arcs" tone="dark" />
     <div class="wrap hero-grid">
       <div class="hero-text">
         <h1 id="hero-baslik">Markanızın sesi dijitalde daha uzağa ulaşsın.</h1>
@@ -35,11 +39,16 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     </div>
   </section>
 
-  <div class="hero-photo" data-grow>
-    <Img name="hero" eager sizes="100vw" ratio="21/9" />
+  <div class="hero-photo-wrap">
+    <div class="hero-photo" data-grow>
+      <Img name="hero" eager sizes="100vw" ratio="21/9" />
+    </div>
+    <div class="wrap hero-badge-row"><Badge class="hero-badge" /></div>
   </div>
 
-  <section class="section" id="ne-yapiyoruz" aria-labelledby="hizmetler-baslik">
+  <section class="section stage on-dark" id="ne-yapiyoruz" aria-labelledby="hizmetler-baslik">
+    <div class="stage-glow" aria-hidden="true"></div>
+    <Arcs class="stage-arcs" tone="light" />
     <div class="wrap">
       <div class="section-head">
         <h2 id="hizmetler-baslik" data-rgb>Ne yapıyoruz?</h2>
@@ -75,18 +84,20 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     </div>
   </section>
 
-  <section class="section work on-dark" aria-labelledby="isler-baslik">
+  <section class="section work" aria-labelledby="isler-baslik">
     <div class="wrap work-grid">
       <div>
+        <p class="kicker">Portfolyo</p>
         <h2 id="isler-baslik" data-scramble>Seçili işler</h2>
         <p>Burada gerçek müşteri projeleri; problem, yaklaşım ve ölçülen sonuçlarıyla yer alacak. Uydurma vaka ya da rakam koymuyoruz.</p>
         <p class="todo">[DOLDURULACAK: izin alınmış 3–4 gerçek proje]</p>
       </div>
-      <div data-curtain><Img name="team" sizes="(min-width: 900px) 50vw, 100vw" ratio="4/3" /></div>
+      <div class="work-media blob" data-curtain><div class="arch"><Img name="team" sizes="(min-width: 900px) 40vw, 100vw" ratio="4/5" /></div></div>
     </div>
   </section>
 
   <section class="section process" aria-labelledby="surec-baslik">
+    <Arcs class="process-arcs" tone="dark" />
     <div class="wrap">
       <div class="section-head">
         <h2 id="surec-baslik" data-rgb>Nasıl çalışıyoruz?</h2>
@@ -115,7 +126,8 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
           {posts.map((p) => (
             <li>
               <a href={url(`/blog/${p.id}/`)} data-cursor="Oku">
-                <Img name={p.data.image} sizes="(min-width: 900px) 33vw, 100vw" ratio="3/2" />
+                <div class="zoom"><Img name={p.data.image} sizes="(min-width: 900px) 33vw, 100vw" ratio="3/2" /></div>
+                <p class="pill pill--light">{p.data.category}</p>
                 <h3>{p.data.title}</h3>
                 <p class="muted">{p.data.description}</p>
               </a>
@@ -140,7 +152,17 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 </Base>
 
 <style>
-  .hero { background: var(--turkuaz); overflow: hidden; }
+  .hero { background: var(--turkuaz); overflow: hidden; isolation: isolate; }
+  .hero-glow { position: absolute; inset: -10%; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(35% 45% at 90% 10%, rgb(255 255 255 / 0.5), transparent 70%),
+      radial-gradient(40% 50% at 0% 90%, rgb(48 213 200 / 1), transparent 70%),
+      radial-gradient(30% 35% at 45% 40%, rgb(201 244 238 / 0.55), transparent 70%); }
+  :global(.motion) .hero-glow { animation: glow-drift 12s ease-in-out infinite alternate; }
+  .hero :global(.hero-arcs) { left: -3%; bottom: 0; width: min(55vw, 560px); z-index: 0; }
+  .hero-photo-wrap { position: relative; }
+  .hero-badge-row { position: absolute; left: 0; right: 0; top: 0; display: flex; justify-content: flex-end; pointer-events: none; z-index: 2; }
+  .hero-badge-row :global(.badge) { pointer-events: auto; transform: translateY(-50%); }
   .hero-grid {
     display: grid; grid-template-columns: 1.25fr 1fr; align-items: center; gap: 2rem;
     padding-block: clamp(3.5rem, 2rem + 6vw, 8rem) clamp(5rem, 4rem + 6vw, 10rem);
@@ -158,18 +180,20 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .section-head h2 { margin: 0; }
   .section-head .lead { margin: 0; max-width: 42ch; }
 
-  .service-list { list-style: none; margin: 0; padding: 0; border-top: 4px solid var(--turkuaz); }
-  .service-list li { border-bottom: 1px solid var(--cizgi); }
+  .service-list { list-style: none; margin: 0; padding: 0; border-top: 2px solid rgb(64 224 208 / 0.5); }
+  .service-list li { border-bottom: 1px solid rgb(255 255 255 / 0.12); }
   .service-list a {
     display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) auto; gap: 1rem 3rem; align-items: center;
     padding: 1.75rem 0; text-decoration: none;
     transition: padding 0.3s var(--ease), background 0.3s var(--ease);
   }
   .service-list h3 { margin: 0; font-size: var(--fs-3); }
-  .service-list p { margin: 0; color: var(--gri); }
-  .service-list .more { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; border: 2px solid var(--petrol); transition: background 0.3s var(--ease); }
+  .service-list h3 { color: var(--beyaz); }
+  .service-list p { margin: 0; color: #b9d6d3; }
+  .service-list .more { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; border: 2px solid rgb(64 224 208 / 0.6); color: var(--turkuaz); transition: background 0.3s var(--ease), color 0.3s; }
   .service-list a:hover { background: var(--turkuaz-50); padding-inline: 1.25rem; }
-  .service-list a:hover h3 { color: var(--turkuaz-700); }
+  .service-list a:hover h3 { color: var(--turkuaz); }
+  .service-list a:hover .more { color: var(--petrol); }
   .service-list a:hover .more { background: var(--turkuaz); border-color: var(--turkuaz); }
   @media (max-width: 820px) {
     .service-list a { grid-template-columns: 1fr auto; }
@@ -177,9 +201,22 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     .service-list .more { width: 44px; height: 44px; grid-row: 1; grid-column: 2; }
   }
 
-  .work { background: var(--petrol); color: #d7ecea; }
-  .work h2 { color: var(--turkuaz); }
-  .work-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: clamp(2rem, 5vw, 5rem); align-items: center; }
+  .work { background: var(--kagit); }
+  .work h2 { font-size: var(--fs-4); }
+  .work-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(2rem, 6vw, 7rem); align-items: center; }
+  .work-media { max-width: 440px; justify-self: center; width: 100%; }
+
+  /* Hizmetler: koyu sahne */
+  .stage { position: relative; overflow: hidden; isolation: isolate; background: var(--petrol); color: #c9e2df; }
+  .stage h2 { color: var(--beyaz); }
+  .stage .lead { color: #b9d6d3; }
+  .stage-glow { position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(40% 40% at 85% 20%, rgb(64 224 208 / 0.22), transparent 70%),
+      radial-gradient(35% 45% at 5% 95%, rgb(27 111 103 / 0.5), transparent 70%); }
+  .stage :global(.stage-arcs) { right: -4%; top: -6%; width: min(50vw, 520px); transform: scale(-1, -1); z-index: -1; }
+  .process { position: relative; overflow: hidden; isolation: isolate; }
+  .process :global(.process-arcs) { right: -4%; bottom: -4%; width: min(46vw, 480px); transform: scaleX(-1); z-index: -1; }
 
   .process { background: var(--turkuaz-50); }
   .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; counter-reset: s; }
@@ -190,7 +227,9 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 
   .post-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
   .post-list a { text-decoration: none; display: block; }
-  .post-list h3 { font-size: var(--fs-2); margin-top: 1.25rem; }
+  .post-list h3 { font-size: var(--fs-2); }
+  .post-list .pill { margin: 1.25rem 0 0.75rem; }
+  .post-list :global(.img-frame) { border-radius: 14px; }
   .post-list a:hover h3 { color: var(--turkuaz-700); text-decoration: underline; text-decoration-color: var(--turkuaz); text-decoration-thickness: 3px; }
 
   .faq-grid { display: grid; grid-template-columns: 1fr 1.6fr; gap: 3rem; }
@@ -210,10 +249,10 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .ex-list a { grid-template-columns: 1fr auto !important; padding: 1.4rem 0 !important; position: relative; }
   .ex-list p { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .ex-list h3 { transition: transform 0.5s var(--ease), color 0.3s; }
-  .explorer.js .ex-list li:not(.active) h3 { color: #6b8381; }
+  .explorer.js .ex-list li:not(.active) h3 { color: #8fb0ad; }
   .explorer.js .ex-list li:not(.active) .more { opacity: 0.4; }
-  .ex-list li.active h3 { color: var(--turkuaz-700); transform: translateX(1rem); }
-  .ex-list li.active .more { background: var(--turkuaz); border-color: var(--turkuaz); }
+  .ex-list li.active h3 { color: var(--turkuaz); transform: translateX(1rem); }
+  .ex-list li.active .more { background: var(--turkuaz); border-color: var(--turkuaz); color: var(--petrol); }
   .ex-progress { position: absolute; left: 0; bottom: -1px; height: 4px; width: 100%; background: var(--turkuaz); transform-origin: left; transform: scaleX(0); }
   .ex-list li.active .ex-progress { transform: scaleX(var(--p, 1)); }
   .ex-list a:hover { background: transparent !important; padding-inline: 0 !important; }
@@ -221,12 +260,13 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .ex-panel { position: sticky; top: 110px; display: grid; }
   .ex-slide { grid-area: 1 / 1; opacity: 0; visibility: hidden; }
   .ex-slide.active { opacity: 1; visibility: visible; }
-  .ex-img { border-radius: 10px; overflow: hidden; box-shadow: 0 0 0 4px var(--turkuaz); }
+  .ex-img { border-radius: 999px 999px 18px 18px; overflow: hidden; box-shadow: 0 0 0 1px rgb(64 224 208 / 0.5), 0 0 80px -10px rgb(64 224 208 / 0.45); }
+  .ex-img :global(.img-frame) { border-radius: inherit; }
   .ex-img :global(img) { transform: scale(1.06); }
   .ex-body { padding-top: 1.5rem; }
-  .ex-short { font-size: var(--fs-1); }
+  .ex-short { font-size: var(--fs-1); color: #d7ecea; }
   .ex-chips { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
-  .ex-chips li { padding: 0.45rem 0.9rem; border-radius: 999px; background: var(--turkuaz-50); box-shadow: inset 0 0 0 1.5px var(--turkuaz-700); font-size: 0.9rem; font-weight: 500; }
+  .ex-chips li { padding: 0.45rem 0.9rem; border-radius: 999px; background: rgb(64 224 208 / 0.1); color: var(--turkuaz); box-shadow: inset 0 0 0 1.5px rgb(64 224 208 / 0.5); font-size: 0.9rem; font-weight: 500; }
 
   @media (max-width: 900px) {
     .explorer { grid-template-columns: 1fr; }

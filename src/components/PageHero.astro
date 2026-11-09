@@ -1,0 +1,19 @@
+---
+// İç sayfalar için ortak giriş alanı: koyu petrol (ya da turkuaz) sahne, ışık hareleri, sinyal yayları.
+import Arcs from './Arcs.astro';
+interface Props { title: string; lead?: string; tone?: 'dark' | 'turkuaz'; compact?: boolean }
+const { title, lead, tone = 'dark', compact = false } = Astro.props;
+---
+<section class:list={['page-hero', `page-hero--${tone}`, { compact }, tone === 'dark' && 'on-dark']}>
+  <div class="ph-glow" aria-hidden="true"></div>
+  <Arcs class="ph-arcs" tone={tone === 'dark' ? 'light' : 'dark'} />
+  <div class="wrap ph-inner">
+    <div class="ph-text">
+      <slot name="before" />
+      <h1>{title}</h1>
+      {lead && <p class="ph-lead" data-intro>{lead}</p>}
+      <slot />
+    </div>
+    {Astro.slots.has('side') && <div class="ph-side" data-intro><slot name="side" /></div>}
+  </div>
+</section>

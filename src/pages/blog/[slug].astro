@@ -4,6 +4,7 @@ import Img from '../../components/Img.astro';
 import Faq from '../../components/Faq.astro';
 import PostMeta from '../../components/PostMeta.astro';
 import CtaBand from '../../components/CtaBand.astro';
+import PageHero from '../../components/PageHero.astro';
 import { getCollection, render } from 'astro:content';
 import { absUrl, url } from '../../lib/url';
 import { imgSrc } from '../../data/images';
@@ -42,15 +43,14 @@ const schema = [{
   image={imgSrc(d.image, 1200)}
   crumbs={[{ name: 'Blog', path: '/blog/' }, { name: d.title, path }]}
   schema={schema}
+  top="dark"
 >
-  <article class="wrap article">
-    <header class="article-head">
-      <p class="cat">{d.category}</p>
-      <h1>{d.title}</h1>
-      <p class="lead" data-intro>{d.description}</p>
-      <PostMeta date={d.date} updated={d.updated} author={d.author} />
-    </header>
-
+  <article>
+    <PageHero compact title={d.title} lead={d.description}>
+      <p class="pill" slot="before">{d.category}</p>
+      <div data-intro><PostMeta date={d.date} updated={d.updated} author={d.author} /></div>
+    </PageHero>
+  <div class="wrap article">
     <div data-intro class="article-img"><Img name={d.image} eager sizes="(min-width: 1320px) 1272px, 100vw" ratio="2/1" /></div>
 
     <div class="article-body">
@@ -83,14 +83,13 @@ const schema = [{
         </aside>
       </div>
     </div>
+  </div>
   </article>
   <CtaBand title="Siteniz yapay zekâ aramalarında görünüyor mu?" text="Sitenizi SEO ve GEO açısından birlikte inceleyelim; nereden başlamanız gerektiğini somut adımlarla paylaşalım." />
 </Base>
 <style>
-  .article-head { padding-block: 2rem 2.5rem; max-width: 60rem; }
-  .article-head h1 { font-size: var(--fs-4); }
-  .cat { margin-bottom: 0.75rem; }
-  :global(.article-img) { margin-bottom: 3rem; }
+  :global(.article-img) { margin: clamp(-6rem, -2rem - 4vw, -2.5rem) 0 4rem; position: relative; z-index: 1; }
+  :global(.article-img .img-frame) { border-radius: 18px; box-shadow: 0 40px 80px -40px rgb(6 42 45 / 0.6); }
   .article-body { display: grid; grid-template-columns: 240px minmax(0, 720px); gap: 4rem; padding-bottom: 5rem; }
   .toc nav { position: sticky; top: 96px; font-size: 0.95rem; }
   .toc-title { font-weight: 600; margin-bottom: 0.75rem; }
@@ -98,13 +97,15 @@ const schema = [{
   .toc a { text-decoration: none; color: var(--gri); }
   .toc a:hover { color: var(--turkuaz-700); text-decoration: underline; }
   .toc nav { border-left: 3px solid var(--turkuaz); padding-left: 1rem; }
-  .summary { background: var(--turkuaz); padding: 1.5rem 1.75rem; border-radius: var(--radius); margin-bottom: 2.5rem; }
+  .summary { position: relative; overflow: hidden; background: var(--turkuaz); padding: 1.75rem 2rem; border-radius: 18px; margin-bottom: 2.5rem; }
+  .summary::after { content: ''; position: absolute; right: -60px; top: -60px; width: 180px; height: 180px; border-radius: 50%; border: 1.5px solid rgb(6 42 45 / 0.25); box-shadow: 0 0 0 30px rgb(6 42 45 / 0.04), 0 0 0 31.5px rgb(6 42 45 / 0.18); pointer-events: none; }
   .summary h2 { font-size: var(--fs-1); margin-bottom: 0.75rem; }
   .summary ul { margin: 0; padding-left: 1.2em; display: grid; gap: 0.6rem; }
   .post-faq { margin-top: 4rem; }
   .post-faq h2 { font-size: var(--fs-2); }
-  .author-box { margin-top: 3rem; padding: 1.5rem; border-left: 6px solid var(--turkuaz); border-radius: var(--radius); background: var(--turkuaz-50); }
-  .author-box a { color: var(--turkuaz-700); font-weight: 600; }
+  .author-box { margin-top: 3rem; padding: 1.75rem; border-left: 6px solid var(--turkuaz); border-radius: 18px; background: var(--petrol); color: #c9e2df; }
+  .author-box strong { color: var(--beyaz); }
+  .author-box a { color: var(--turkuaz); font-weight: 600; }
   .author-box p { margin: 0; }
   @media (max-width: 960px) { .article-body { grid-template-columns: 1fr; gap: 0; } .toc { display: none; } }
 </style>

@@ -1,5 +1,7 @@
 ---
 import { url } from '../lib/url';
+import Arcs from './Arcs.astro';
+import Badge from './Badge.astro';
 interface Props { title?: string; text?: string }
 const {
   title = 'Bir kahve içip konuşalım.',
@@ -7,11 +9,15 @@ const {
 } = Astro.props;
 ---
 <section class="cta-band section on-turkuaz" aria-labelledby="cta-baslik">
+  <Arcs class="cta-arcs" tone="dark" />
   <div class="wrap">
     <h2 id="cta-baslik" data-stretch>{title}</h2>
-    <div data-reveal>
+    <div class="cta-side" data-reveal>
       <p>{text}</p>
-      <a class="btn" href={url('/iletisim/')}>Ücretsiz ön görüşme planla</a>
+      <div class="cta-actions">
+        <a class="btn" href={url('/iletisim/')}>Ücretsiz ön görüşme planla</a>
+        <Badge />
+      </div>
     </div>
   </div>
 </section>

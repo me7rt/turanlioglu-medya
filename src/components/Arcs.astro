@@ -1,0 +1,12 @@
+---
+// Dekoratif "yayın sinyali" yayları — logodaki işaretin büyük, arka plan versiyonu.
+interface Props { class?: string; tone?: 'light' | 'dark' }
+const { class: cls, tone = 'dark' } = Astro.props;
+---
+<svg class:list={['arcs', `arcs--${tone}`, cls]} viewBox="0 0 600 600" aria-hidden="true" focusable="false">
+  <path d="M0 450a150 150 0 0 1 150 150" />
+  <path d="M0 330a270 270 0 0 1 270 270" />
+  <path d="M0 210a390 390 0 0 1 390 390" />
+  <path d="M0 90a510 510 0 0 1 510 510" />
+  <circle cx="0" cy="600" r="70" />
+</svg>
