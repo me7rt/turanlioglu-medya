@@ -167,12 +167,12 @@ export function horizontal(track: HTMLElement | null) {
   const dist = () => Math.max(0, track.scrollWidth - track.clientWidth + 40);
   gsap.fromTo(track, { x: () => dist() * 0.15 }, {
     x: () => -dist(), ease: 'none',
-    scrollTrigger: { trigger: track, start: 'top 95%', end: 'bottom 5%', scrub: 0.6, invalidateOnRefresh: true },
+    scrollTrigger: { trigger: track, start: 'top 100%', end: 'top 30%', scrub: 0.3, invalidateOnRefresh: true },
   });
   [...track.children].forEach((card, i) => {
     gsap.fromTo(card, { rotate: i % 2 ? 5 : -5, y: 60 }, {
       rotate: 0, y: 0, ease: 'none',
-      scrollTrigger: { trigger: track, start: 'top 95%', end: 'center 50%', scrub: 0.6 },
+      scrollTrigger: { trigger: track, start: 'top 100%', end: 'top 45%', scrub: 0.3 },
     });
   });
 }
@@ -191,7 +191,7 @@ export function scramble() {
     const run = () => {
       const o = { p: 0 };
       gsap.to(o, {
-        p: 1, duration: 1.3, ease: 'power2.out',
+        p: 1, duration: 0.55, ease: 'power1.out',
         onUpdate: () => {
           const done = Math.floor(o.p * text.length);
           out.textContent = [...text].map((c, i) => (i < done || c === ' ' ? c : GLYPHS[(Math.random() * GLYPHS.length) | 0])).join('');

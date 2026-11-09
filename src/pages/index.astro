@@ -9,7 +9,6 @@ import { url } from '../lib/url';
 import { imgSrc } from '../data/images';
 import { getCollection } from 'astro:content';
 
-const marqueeWords = ['Sosyal medya', 'Web tasarım', 'Dijital reklam', 'İçerik', 'Video', 'SEO', 'GEO'];
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 3);
@@ -38,20 +37,6 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 
   <div class="hero-photo" data-grow>
     <Img name="hero" eager sizes="100vw" ratio="21/9" />
-  </div>
-
-  <div class="mq" aria-hidden="true">
-    {[['outline', 'left'], ['fill', 'right']].map(([style, dir]) => (
-      <div class:list={['mq-row', style]} data-marquee={dir}>
-        <div class="mq-track">
-          {[0, 1].map(() => (
-            <>{marqueeWords.map((w) => (
-              <span class="mq-item">{w}<svg class="mq-star" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4z"/></svg></span>
-            ))}</>
-          ))}
-        </div>
-      </div>
-    ))}
   </div>
 
   <section class="section" id="ne-yapiyoruz" aria-labelledby="hizmetler-baslik">

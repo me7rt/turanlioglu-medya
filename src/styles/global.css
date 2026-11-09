@@ -334,16 +334,7 @@ h1.loose .w { overflow: visible; }
 /* Şifre çözme başlıkları: genişlik zıplamasın */
 [data-scramble] span { font-variant-numeric: tabular-nums; }
 
-/* Hareket aç/kapat düğmesi */
-.motion-toggle {
-  position: fixed; right: 16px; bottom: 16px; z-index: 120;
-  display: inline-flex; align-items: center; gap: 0.5rem; min-height: 44px; padding: 0.6rem 1rem;
-  font: 600 0.85rem/1 var(--font-text); color: var(--petrol); background: var(--beyaz);
-  border: 2px solid var(--petrol); border-radius: 999px; cursor: pointer;
-  box-shadow: 0 6px 18px rgb(6 42 45 / 0.15);
-}
-.motion-toggle:hover { background: var(--turkuaz); }
-.motion-toggle svg { width: 16px; height: 16px; }
+.footer-link { background: none; border: 0; padding: 0; font: inherit; color: var(--beyaz); text-decoration: underline; text-underline-offset: 0.2em; cursor: pointer; }
 
 /* İmleçten yayılan sinyal halkaları */
 .fx-rings { position: fixed; inset: 0; z-index: 150; pointer-events: none; }

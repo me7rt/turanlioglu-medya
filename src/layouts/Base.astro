@@ -120,18 +120,14 @@ const robots = isPreview || noindex ? 'noindex, nofollow' : 'index, follow, max-
       <slot />
     </main>
     <Footer />
-    <button class="motion-toggle" type="button" data-motion-toggle aria-pressed="false">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
-      <span>Hareketi durdur</span>
-    </button>
     <script>import '../scripts/motion';</script>
     <script>
       const t = document.querySelector<HTMLButtonElement>('[data-motion-toggle]');
+      // Düğme footer'da (WCAG 2.2.2: hareketli içeriği durdurma imkânı)
       const off = document.documentElement.classList.contains('no-motion');
       if (t) {
         t.setAttribute('aria-pressed', String(off));
-        t.querySelector('span')!.textContent = off ? 'Hareketi başlat' : 'Hareketi durdur';
-        if (off) t.querySelector('svg')!.innerHTML = '<path fill="currentColor" d="M8 5l11 7-11 7z"/>';
+        t.textContent = off ? 'Animasyonları aç' : 'Animasyonları kapat';
         t.addEventListener('click', () => {
           try { localStorage.setItem('hareket', off ? 'acik' : 'kapali'); } catch (e) {}
           location.reload();
