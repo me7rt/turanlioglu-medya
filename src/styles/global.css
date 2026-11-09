@@ -315,7 +315,7 @@ h1.loose .w { overflow: visible; }
 .hscroll-section { overflow: clip; }
 .steps.hscroll { display: flex !important; gap: clamp(1rem, 2vw, 2rem); width: auto; }
 .steps.hscroll > li {
-  flex: 0 0 min(78vw, 520px); min-height: min(56vh, 460px); padding: clamp(1.5rem, 3vw, 2.5rem) !important;
+  flex: 0 0 clamp(300px, 27vw, 420px); min-height: min(52vh, 420px); padding: clamp(1.5rem, 3vw, 2.5rem) !important;
   border-top: 0 !important; border-radius: 10px; display: flex; flex-direction: column; justify-content: flex-end;
   background: var(--beyaz); box-shadow: 0 0 0 2px var(--petrol);
 }
@@ -327,7 +327,7 @@ h1.loose .w { overflow: visible; }
 .steps.hscroll > li:nth-child(4n+2) .step-no { color: var(--turkuaz); }
 .steps.hscroll > li:nth-child(4n+3) { background: var(--turkuaz-100); }
 .steps.hscroll > li:nth-child(4n+1) p, .steps.hscroll > li:nth-child(4n+3) p { color: var(--petrol); }
-.steps.hscroll .step-no { font-size: clamp(5rem, 3rem + 8vw, 11rem); margin-bottom: auto; }
+.steps.hscroll .step-no { font-size: clamp(4.5rem, 3rem + 5vw, 8rem); margin-bottom: auto; }
 .steps.hscroll > li h3 { font-size: var(--fs-3); margin-top: 1rem; }
 .steps.hscroll > li p { font-size: var(--fs-1); max-width: 30ch; }
 

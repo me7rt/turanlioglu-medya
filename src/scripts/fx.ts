@@ -161,18 +161,21 @@ export function grow() {
 // ============ 5. Süreç: kartlar kaydırdıkça kendiliğinden yana kayar (ekranı tutmaz) ============
 export function horizontal(track: HTMLElement | null) {
   if (!track) return;
+  // Telefonda kartlar alt alta: yana kaydırmada okunmuyor
+  if (window.matchMedia('(max-width: 700px)').matches) return;
   track.classList.add('hscroll');
   const section = track.closest('section')!;
   section.classList.add('hscroll-section');
   const dist = () => Math.max(0, track.scrollWidth - track.clientWidth + 40);
-  gsap.fromTo(track, { x: () => dist() * 0.15 }, {
+  // Mert: 4 kart da okunabilsin. Kartlar dar, kayma kısa ve kartlar ekrandayken yavaşça olur.
+  gsap.fromTo(track, { x: 0 }, {
     x: () => -dist(), ease: 'none',
-    scrollTrigger: { trigger: track, start: 'top 100%', end: 'top 30%', scrub: 0.3, invalidateOnRefresh: true },
+    scrollTrigger: { trigger: track, start: 'top 38%', end: 'top 0%', scrub: 1, invalidateOnRefresh: true },
   });
   [...track.children].forEach((card, i) => {
     gsap.fromTo(card, { rotate: i % 2 ? 5 : -5, y: 60 }, {
       rotate: 0, y: 0, ease: 'none',
-      scrollTrigger: { trigger: track, start: 'top 100%', end: 'top 45%', scrub: 0.3 },
+      scrollTrigger: { trigger: track, start: 'top 100%', end: 'top 60%', scrub: 0.3 },
     });
   });
 }
