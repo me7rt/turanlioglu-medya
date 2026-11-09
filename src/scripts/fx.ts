@@ -158,73 +158,21 @@ export function grow() {
   });
 }
 
-// ============ 4. Hizmetler: kaydırmayla dönen 3B silindir ============
-export function wheel(list: HTMLElement | null) {
-  if (!list) return;
-  const originals = [...list.children] as HTMLElement[];
-  // Çarkı doldurmak için kopyalar (ekran okuyucu ve klavye için gizli)
-  originals.forEach((li) => {
-    const c = li.cloneNode(true) as HTMLElement;
-    c.setAttribute('aria-hidden', 'true');
-    c.querySelectorAll('a').forEach((a) => a.setAttribute('tabindex', '-1'));
-    list.appendChild(c);
-  });
-  list.classList.add('wheel');
-  const rows = [...list.children] as HTMLElement[];
-  const n = rows.length;
-  const step = 360 / n;
-  let radius = 0;
-  const layout = () => {
-    const h = Math.max(...rows.map((r) => r.offsetHeight));
-    radius = (h * 1.08) / (2 * Math.tan(Math.PI / n));
-    list.style.height = `${Math.min(window.innerHeight * 0.62, radius * 2 + h)}px`;
-    gsap.set(rows, { transformOrigin: `50% 50% ${-radius}px`, yPercent: -50 });
-  };
-  layout();
-  const spin = { rotation: 0 };
-  const paint = () => {
-    rows.forEach((r, i) => {
-      const angle = gsap.utils.wrap(-180, 180, i * step + spin.rotation);
-      const facing = Math.cos((angle * Math.PI) / 180);
-      const front = Math.max(0, facing);
-      gsap.set(r, {
-        rotationX: -angle,
-        opacity: 0.04 + Math.pow(front, 2) * 0.96,
-        scale: 0.7 + front * 0.3,
-        filter: `blur(${((1 - front) * 6).toFixed(2)}px)`,
-        pointerEvents: facing > 0.95 ? 'auto' : 'none',
-      });
-      r.classList.toggle('front', facing > 0.95);
-    });
-  };
-  paint();
-  // Klavye ile bir hizmete gelinirse çark o hizmete döner
-  originals.forEach((li, i) => li.querySelector('a')?.addEventListener('focus', () => {
-    gsap.to(spin, { rotation: -i * step, duration: 0.6, ease: EASE, onUpdate: paint });
-  }));
-  const section = list.closest('section')!;
-  gsap.to(spin, {
-    rotation: -step * (originals.length - 1) - step * 0.0001, ease: 'none', onUpdate: paint,
-    scrollTrigger: { trigger: section, start: 'top top', end: '+=140%', pin: true, scrub: 1, invalidateOnRefresh: true, onRefresh: layout },
-  });
-}
-
-// ============ 5. Süreç: ekran sabitlenir, kartlar yana kayar ============
+// ============ 5. Süreç: kartlar kaydırdıkça kendiliğinden yana kayar (ekranı tutmaz) ============
 export function horizontal(track: HTMLElement | null) {
   if (!track) return;
   track.classList.add('hscroll');
   const section = track.closest('section')!;
   section.classList.add('hscroll-section');
   const dist = () => Math.max(0, track.scrollWidth - track.clientWidth + 40);
-  gsap.to(track, {
+  gsap.fromTo(track, { x: () => dist() * 0.15 }, {
     x: () => -dist(), ease: 'none',
-    scrollTrigger: { trigger: section, start: 'top top', end: () => '+=' + dist(), pin: true, scrub: 1, anticipatePin: 1, invalidateOnRefresh: true },
+    scrollTrigger: { trigger: track, start: 'top 95%', end: 'bottom 5%', scrub: 0.6, invalidateOnRefresh: true },
   });
-  // Kartlar geçerken hafif dönüp eğilir
   [...track.children].forEach((card, i) => {
-    gsap.fromTo(card, { rotate: i % 2 ? 4 : -4, y: 40 }, {
+    gsap.fromTo(card, { rotate: i % 2 ? 5 : -5, y: 60 }, {
       rotate: 0, y: 0, ease: 'none',
-      scrollTrigger: { trigger: section, start: 'top top', end: () => '+=' + dist(), scrub: 1 },
+      scrollTrigger: { trigger: track, start: 'top 95%', end: 'center 50%', scrub: 0.6 },
     });
   });
 }
@@ -256,39 +204,91 @@ export function scramble() {
   });
 }
 
-// ============ 7. İmlecin arkasında turkuaz kuyruklu yıldız ============
-export function trail() {
-  const N = 10;
-  const wrap = document.createElement('div');
-  wrap.className = 'fx-trail';
-  wrap.setAttribute('aria-hidden', 'true');
-  const colors = ['#40E0D0', '#30D5C8', '#1B6F67'];
-  const blobs = Array.from({ length: N }, (_, i) => {
-    const t = i / (N - 1);
-    const size = 170 - t * 130;
-    const b = document.createElement('div');
-    const col = colors[Math.min(2, Math.floor(t * 3))];
-    b.style.cssText = `width:${size}px;height:${size}px;background:radial-gradient(circle, ${col} 0%, transparent 68%)`;
-    wrap.appendChild(b);
-    return { el: b, size, op: 0.55 - t * 0.47, x: innerWidth / 2, y: innerHeight / 2 };
-  });
-  document.body.appendChild(wrap);
-  let mx = innerWidth / 2, my = innerHeight / 2, vx = 0, vy = 0, lx = mx, ly = my, intensity = 0;
-  window.addEventListener('pointermove', (e) => { mx = e.clientX; my = e.clientY; }, { passive: true });
-  gsap.ticker.add(() => {
-    if (document.hidden) return;
-    const dx = mx - lx, dy = my - ly; lx = mx; ly = my;
-    vx = vx * 0.8 + dx * 0.2; vy = vy * 0.8 + dy * 0.2;
-    const speed = Math.hypot(vx, vy), angle = Math.atan2(vy, vx);
-    const stretch = Math.min(speed * 0.06, 2.4);
-    const target = Math.min(speed / 12, 1);
-    intensity += (target - intensity) * (target > intensity ? 0.4 : 0.08);
-    blobs.forEach((b, i) => {
-      const lead = i === 0 ? { x: mx, y: my } : blobs[i - 1];
-      b.x += (lead.x - b.x) * 0.22; b.y += (lead.y - b.y) * 0.22;
-      const sx = 1 + stretch, sy = 1 / (1 + stretch * 0.55);
-      b.el.style.transform = `translate3d(${b.x - b.size / 2}px,${b.y - b.size / 2}px,0) rotate(${angle}rad) scale(${sx},${sy})`;
-      b.el.style.opacity = String(b.op * intensity);
+// ============ 7. İmleçten yayılan sinyal halkaları (logodaki yayın sinyali) ============
+export function rings() {
+  const layer = document.createElement('div');
+  layer.className = 'fx-rings';
+  layer.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(layer);
+  let lx = 0, ly = 0, acc = 0, live = 0;
+  window.addEventListener('pointermove', (e) => {
+    acc += Math.hypot(e.clientX - lx, e.clientY - ly);
+    lx = e.clientX; ly = e.clientY;
+    if (acc < 90 || live > 6) return;
+    acc = 0; live++;
+    const r = document.createElement('span');
+    r.style.left = `${e.clientX}px`; r.style.top = `${e.clientY}px`;
+    layer.appendChild(r);
+    gsap.fromTo(r, { scale: 0.2, opacity: 0.9 }, {
+      scale: 1, opacity: 0, duration: 1.1, ease: 'power2.out',
+      onComplete: () => { r.remove(); live--; },
+    });
+  }, { passive: true });
+  // Tıklayınca daha büyük çift halka
+  window.addEventListener('pointerdown', (e) => {
+    [0, 0.12].forEach((d) => {
+      const r = document.createElement('span');
+      r.className = 'big';
+      r.style.left = `${e.clientX}px`; r.style.top = `${e.clientY}px`;
+      layer.appendChild(r);
+      gsap.fromTo(r, { scale: 0.1, opacity: 1 }, { scale: 1, opacity: 0, duration: 0.9, delay: d, ease: 'power3.out', onComplete: () => r.remove() });
     });
   });
+}
+
+// ============ 8. Hizmet gezgini: üzerine gelince sağdaki panel değişir, kendiliğinden de döner ============
+export function explorer(root: HTMLElement | null) {
+  if (!root) return;
+  root.classList.add('js');
+  const items = [...root.querySelectorAll<HTMLElement>('.ex-list > li')];
+  const slides = [...root.querySelectorAll<HTMLElement>('.ex-slide')];
+  const panel = root.querySelector<HTMLElement>('.ex-panel');
+  let active = 0, progress: gsap.core.Tween | null = null, hovering = false, inView = false;
+
+  function show(i: number, instant = false) {
+    if (i === active && !instant) return;
+    const prev = slides[active], next = slides[i];
+    items[active].classList.remove('active'); items[active].style.removeProperty('--p');
+    items[i].classList.add('active');
+    if (prev && next && prev !== next) {
+      gsap.to(prev, { opacity: 0, duration: 0.4, onComplete: () => { prev.classList.remove('active'); gsap.set(prev, { clearProps: 'opacity,visibility' }); } });
+      next.classList.add('active');
+      gsap.fromTo(next.querySelector('.ex-img'), { clipPath: 'inset(0 0 100% 0 round 10px)' }, { clipPath: 'inset(0 0 0% 0 round 10px)', duration: 0.8, ease: 'expo.out' });
+      gsap.fromTo(next.querySelector('img'), { scale: 1.3 }, { scale: 1.06, duration: 1.1, ease: 'expo.out' });
+      gsap.fromTo(next.querySelectorAll('.ex-short, .ex-chips li'), { opacity: 0, y: 16, filter: 'blur(6px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.6, stagger: 0.05, ease: EASE, delay: 0.1 });
+      gsap.fromTo(next, { opacity: 0 }, { opacity: 1, duration: 0.3 });
+    }
+    active = i;
+  }
+  function autoplay() {
+    progress?.kill();
+    if (hovering || !inView) return;
+    const o = { p: 0 };
+    progress = gsap.to(o, {
+      p: 1, duration: 4.5, ease: 'none',
+      onUpdate: () => items[active].style.setProperty('--p', o.p.toFixed(3)),
+      onComplete: () => { show((active + 1) % items.length); autoplay(); },
+    });
+  }
+  items.forEach((li, i) => {
+    const a = li.querySelector('a')!;
+    const go = () => { show(i); items[i].style.setProperty('--p', '1'); };
+    a.addEventListener('pointerenter', go);
+    a.addEventListener('focus', go);
+  });
+  root.addEventListener('pointerenter', () => { hovering = true; progress?.kill(); items[active].style.setProperty('--p', '1'); });
+  root.addEventListener('pointerleave', () => { hovering = false; autoplay(); });
+  new IntersectionObserver(([e]) => { inView = e.isIntersecting; if (inView) autoplay(); else progress?.kill(); }, { threshold: 0.35 }).observe(root);
+  // Panelde imlece göre hafif 3B eğim
+  if (panel) {
+    const rx = gsap.quickTo(panel, 'rotationY', { duration: 0.6, ease: 'power3' });
+    const ry = gsap.quickTo(panel, 'rotationX', { duration: 0.6, ease: 'power3' });
+    gsap.set(panel, { transformPerspective: 900 });
+    panel.parentElement!.addEventListener('pointermove', (e) => {
+      const r = panel.getBoundingClientRect();
+      rx(((e.clientX - r.left) / r.width - 0.5) * 8);
+      ry(-((e.clientY - r.top) / r.height - 0.5) * 8);
+    });
+    root.addEventListener('pointerleave', () => { rx(0); ry(0); });
+  }
 }

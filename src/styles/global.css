@@ -311,20 +311,6 @@ p { margin: 0 0 1em; max-width: 68ch; text-wrap: pretty; }
 .ch { display: inline-block; will-change: transform; }
 h1.loose .w { overflow: visible; }
 
-/* 3B hizmet çarkı */
-.service-list.wheel { position: relative; perspective: 1500px; border-top: 0; overflow: clip; overflow-clip-margin: 8px; }
-.service-list.wheel > li {
-  position: absolute; left: 0; right: 0; top: 50%; border-bottom: 0;
-  backface-visibility: hidden; will-change: transform, opacity, filter;
-}
-.service-list.wheel > li a { padding-inline: 1.25rem; border-radius: 6px; }
-.service-list.wheel > li.front a { background: var(--turkuaz-50); box-shadow: inset 0 0 0 3px var(--turkuaz); }
-.service-list.wheel::before, .service-list.wheel::after {
-  content: ''; position: absolute; left: 0; right: 0; height: 4px; background: var(--turkuaz); z-index: 2; pointer-events: none;
-}
-.service-list.wheel::before { top: 0; }
-.service-list.wheel::after { bottom: 0; }
-
 /* Süreç: yatay kayan kartlar */
 .hscroll-section { overflow: clip; }
 .steps.hscroll { display: flex !important; gap: clamp(1rem, 2vw, 2rem); width: auto; }
@@ -345,10 +331,6 @@ h1.loose .w { overflow: visible; }
 .steps.hscroll > li h3 { font-size: var(--fs-3); margin-top: 1rem; }
 .steps.hscroll > li p { font-size: var(--fs-1); max-width: 30ch; }
 
-/* İmleç izi */
-.fx-trail { position: fixed; inset: 0; z-index: 150; pointer-events: none; mix-blend-mode: multiply; }
-.fx-trail > div { position: absolute; left: 0; top: 0; border-radius: 50%; will-change: transform, opacity; opacity: 0; }
-
 /* Şifre çözme başlıkları: genişlik zıplamasın */
 [data-scramble] span { font-variant-numeric: tabular-nums; }
 
@@ -362,3 +344,12 @@ h1.loose .w { overflow: visible; }
 }
 .motion-toggle:hover { background: var(--turkuaz); }
 .motion-toggle svg { width: 16px; height: 16px; }
+
+/* İmleçten yayılan sinyal halkaları */
+.fx-rings { position: fixed; inset: 0; z-index: 150; pointer-events: none; }
+.fx-rings span {
+  position: absolute; width: 56px; height: 56px; margin: -28px 0 0 -28px; border-radius: 50%;
+  border: 2px solid var(--turkuaz-700); will-change: transform, opacity;
+}
+.fx-rings span.big { width: 140px; height: 140px; margin: -70px 0 0 -70px; border: 3px solid var(--turkuaz); }
+.on-dark .fx-rings span { border-color: var(--turkuaz); }

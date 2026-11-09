@@ -60,19 +60,33 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
         <h2 id="hizmetler-baslik" data-rgb>Ne yapıyoruz?</h2>
         <p class="lead" data-reveal>Beş hizmet, tek strateji. İhtiyacınıza göre birini ya da hepsini birlikte alabilirsiniz.</p>
       </div>
-      <ul class="service-list" data-preview-list data-wheel>
-        {services.map((s) => (
-          <li>
-            <a href={url(`/hizmetler/${s.slug}/`)} data-preview={imgSrc(s.image, 700)} data-cursor="İncele">
-              <h3>{s.name}</h3>
-              <p>{s.short}</p>
-              <span class="more" aria-hidden="true">
-                <svg viewBox="0 0 24 24" width="28" height="28"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-            </a>
-          </li>
-        ))}
-      </ul>
+      <div class="explorer" data-explorer>
+        <ul class="service-list ex-list">
+          {services.map((s, i) => (
+            <li class:list={{ active: i === 0 }}>
+              <a href={url(`/hizmetler/${s.slug}/`)} data-cursor="İncele">
+                <h3>{s.name}</h3>
+                <p>{s.short}</p>
+                <span class="more" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="28" height="28"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+                <span class="ex-progress" aria-hidden="true"></span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <div class="ex-panel" aria-hidden="true">
+          {services.map((s, i) => (
+            <div class:list={['ex-slide', { active: i === 0 }]}>
+              <div class="ex-img"><Img name={s.image} sizes="(min-width: 900px) 45vw, 1px" ratio="4/3" /></div>
+              <div class="ex-body">
+                <p class="ex-short">{s.short}</p>
+                <ul class="ex-chips">{s.includes.slice(0, 4).map((x) => <li>{x}</li>)}</ul>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   </section>
 
@@ -202,4 +216,38 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     .post-list { grid-template-columns: 1fr; }
   }
   @media (max-width: 520px) { .steps { grid-template-columns: 1fr; } }
+</style>
+<style>
+  /* Hizmet gezgini: solda liste, sağda yapışkan önizleme paneli. Kaydırmayı hiç durdurmaz. */
+  .explorer { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 5rem); align-items: start; }
+  .ex-list { position: relative; }
+  .ex-list li { position: relative; transition: opacity 0.4s var(--ease); }
+  .ex-list a { grid-template-columns: 1fr auto !important; padding: 1.4rem 0 !important; position: relative; }
+  .ex-list p { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .ex-list h3 { transition: transform 0.5s var(--ease), color 0.3s; }
+  .explorer.js .ex-list li:not(.active) h3 { color: #6b8381; }
+  .explorer.js .ex-list li:not(.active) .more { opacity: 0.4; }
+  .ex-list li.active h3 { color: var(--turkuaz-700); transform: translateX(1rem); }
+  .ex-list li.active .more { background: var(--turkuaz); border-color: var(--turkuaz); }
+  .ex-progress { position: absolute; left: 0; bottom: -1px; height: 4px; width: 100%; background: var(--turkuaz); transform-origin: left; transform: scaleX(0); }
+  .ex-list li.active .ex-progress { transform: scaleX(var(--p, 1)); }
+  .ex-list a:hover { background: transparent !important; padding-inline: 0 !important; }
+
+  .ex-panel { position: sticky; top: 110px; display: grid; }
+  .ex-slide { grid-area: 1 / 1; opacity: 0; visibility: hidden; }
+  .ex-slide.active { opacity: 1; visibility: visible; }
+  .ex-img { border-radius: 10px; overflow: hidden; box-shadow: 0 0 0 4px var(--turkuaz); }
+  .ex-img :global(img) { transform: scale(1.06); }
+  .ex-body { padding-top: 1.5rem; }
+  .ex-short { font-size: var(--fs-1); }
+  .ex-chips { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .ex-chips li { padding: 0.45rem 0.9rem; border-radius: 999px; background: var(--turkuaz-50); box-shadow: inset 0 0 0 1.5px var(--turkuaz-700); font-size: 0.9rem; font-weight: 500; }
+
+  @media (max-width: 900px) {
+    .explorer { grid-template-columns: 1fr; }
+    .ex-panel { display: none; }
+    .ex-list p { position: static; width: auto; height: auto; clip: auto; white-space: normal; grid-column: 1 / -1; }
+    .explorer.js .ex-list li:not(.active) { opacity: 1; }
+    .ex-list li.active h3 { transform: none; }
+  }
 </style>

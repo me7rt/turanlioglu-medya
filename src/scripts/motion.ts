@@ -22,7 +22,7 @@ if (reduce) {
 
 function init() {
   // ---------- Yumuşak kaydırma (Lenis, ScrollTrigger ile senkron) ----------
-  const lenis = new Lenis({ lerp: 0.09, smoothWheel: true, anchors: { offset: -90 } });
+  const lenis = new Lenis({ lerp: 0.16, smoothWheel: true, wheelMultiplier: 1.15, anchors: { offset: -90 } });
   lenis.on('scroll', ScrollTrigger.update);
   gsap.ticker.add((t) => lenis.raf(t * 1000));
   gsap.ticker.lagSmoothing(0);
@@ -41,7 +41,7 @@ function init() {
   heroIntro();
   fx.water(hero);
   fx.grow();
-  fx.wheel(document.querySelector('[data-wheel]'));
+  fx.explorer(document.querySelector('[data-explorer]'));
   fx.horizontal(document.querySelector('[data-hscroll]'));
   fx.scramble();
   reveals();
@@ -49,7 +49,7 @@ function init() {
   rgbSplit(vel);
   lines();
   parallax();
-  if (fine) { cursor(); servicePreview(); magnetic(); fx.trail(); }
+  if (fine) { cursor(); servicePreview(); magnetic(); fx.rings(); }
   ScrollTrigger.refresh();
   scrollHint();
 
