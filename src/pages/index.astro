@@ -7,6 +7,7 @@ import Faq from '../components/Faq.astro';
 import CtaBand from '../components/CtaBand.astro';
 import Arcs from '../components/Arcs.astro';
 import Badge from '../components/Badge.astro';
+import StepIcon from '../components/StepIcon.astro';
 import { site, services, faq, process } from '../data/site';
 import { url } from '../lib/url';
 import { imgSrc } from '../data/images';
@@ -110,6 +111,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
       <ol class="steps" data-hscroll>
         {process.map((p, i) => (
           <li data-line>
+            <StepIcon n={i} />
             <span class="step-no" aria-hidden="true" data-count>{i + 1}</span>
             <h3>{p.title}</h3>
             <p>{p.text}</p>

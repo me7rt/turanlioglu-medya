@@ -1,0 +1,45 @@
+---
+// Süreç adımı ikonları: sinyal karta gelince çizilerek canlanır (fx.ts → signal)
+interface Props { n: number }
+const { n } = Astro.props;
+---
+<svg class="step-ic" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+  {n === 0 && (
+    <g>
+      <path class="d" d="M12 12h26a6 6 0 0 1 6 6v12a6 6 0 0 1-6 6H20l-9 8v-8a6 6 0 0 1-5-6V18a6 6 0 0 1 6-6z" />
+      <path class="d" d="M50 26h4a6 6 0 0 1 6 6v12a6 6 0 0 1-6 6h-2v8l-9-8H32a6 6 0 0 1-6-6v-2" />
+      <circle class="dot" cx="16" cy="24" r="2.6" /><circle class="dot" cx="25" cy="24" r="2.6" /><circle class="dot" cx="34" cy="24" r="2.6" />
+    </g>
+  )}
+  {n === 1 && (
+    <g>
+      <path class="d dash" d="M10 54C10 36 34 44 32 30S52 18 52 10" />
+      <circle class="pop" cx="10" cy="54" r="4" />
+      <path class="d pin" d="M52 4a7 7 0 0 1 7 7c0 6-7 12-7 12s-7-6-7-12a7 7 0 0 1 7-7z" />
+      <circle class="pop" cx="52" cy="11" r="2.2" />
+    </g>
+  )}
+  {n === 2 && (
+    <g>
+      <rect class="d" x="6" y="12" width="40" height="40" rx="6" />
+      <path class="d" d="M14 42l9-10 7 7 6-6 6 7" />
+      <path class="d star" d="M50 4l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" />
+    </g>
+  )}
+  {n === 3 && (
+    <g>
+      <path class="d" d="M6 58h52" />
+      <rect class="bar" x="10" y="38" width="9" height="20" rx="2" />
+      <rect class="bar" x="25" y="28" width="9" height="30" rx="2" />
+      <rect class="bar" x="40" y="16" width="9" height="42" rx="2" />
+      <path class="d" d="M8 30L22 20l12 6L56 8" /><path class="d" d="M48 8h8v8" />
+    </g>
+  )}
+</svg>
+<style>
+  .step-ic { position: absolute; top: clamp(1.25rem, 2.5vw, 2rem); right: clamp(1.25rem, 2.5vw, 2rem); width: clamp(48px, 4.4vw, 64px); height: auto; overflow: visible;
+    fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; color: var(--petrol); }
+  .step-ic .dot, .step-ic .pop { fill: currentColor; stroke: none; }
+  .step-ic .bar { fill: currentColor; stroke: none; opacity: 0.85; }
+  .step-ic .dash { stroke-dasharray: 2 7; }
+</style>

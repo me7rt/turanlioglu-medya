@@ -340,7 +340,10 @@ h1.loose .w { overflow: visible; }
 [data-scramble] .sc-rest { opacity: 0; }
 @property --glow { syntax: '<number>'; inherits: false; initial-value: 0; }
 .steps.hscroll > li { transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease); box-shadow: 0 0 0 2px var(--petrol), 0 0 calc(var(--glow) * 36px) calc(var(--glow) * 4px) rgb(64 224 208 / 0.7); }
-.steps.hscroll > li:hover { transform: translateY(-6px); }
+.steps.hscroll > li { position: relative; will-change: transform; }
+.steps.hscroll > li:nth-child(4n+2) .step-ic { color: var(--turkuaz); }
+.steps.hscroll > li:nth-child(4n+3) .step-ic, .steps.hscroll > li:nth-child(4n+4) .step-ic { color: var(--turkuaz-700); }
+.steps.hscroll { perspective: 1200px; }
 
 
 /* İmleçten yayılan sinyal halkaları */

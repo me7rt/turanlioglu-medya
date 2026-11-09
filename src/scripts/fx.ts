@@ -164,30 +164,76 @@ export function horizontal(track: HTMLElement | null) {
   track.classList.add('hscroll');
   const section = track.closest('section')!;
   section.classList.add('hscroll-section');
-  // Mert: kaydırma hiçbir yerde "durmuş gibi" hissettirmesin. Kartlar yana kaymaz, yan yana sabit durur;
-  // sadece ekrana girerken eğik ve aşağıdan gelip yerine oturur.
-  gsap.fromTo(track.children, { rotate: (i) => (i % 2 ? 5 : -5), y: 60, opacity: 0 }, {
-    rotate: 0, y: 0, opacity: 1, duration: 0.9, ease: 'power3.out', stagger: 0.12, clearProps: 'transform',
+  // Mert: kaydırma hiçbir yerde "durmuş gibi" hissettirmesin. Kartlar yana kaymaz, yan yana sabit durur.
+  // Giriş: kartlar iskambil dağıtır gibi soldan dönerek sırayla açılır.
+  const cards = [...track.children] as HTMLElement[];
+  // İkonların çizgileri başta gizli
+  track.querySelectorAll<SVGGeometryElement>('.step-ic .d').forEach((p) => {
+    const len = Math.ceil(p.getTotalLength?.() ?? 200);
+    if (!p.classList.contains('dash')) gsap.set(p, { strokeDasharray: len, strokeDashoffset: len });
+    else gsap.set(p, { opacity: 0 });
+  });
+  gsap.set(track.querySelectorAll('.step-ic .dot, .step-ic .pop, .step-ic .bar, .step-ic .star'), { opacity: 0 });
+  gsap.fromTo(cards, { rotateY: -75, y: 50, opacity: 0, transformOrigin: 'left center' }, {
+    rotateY: 0, y: 0, opacity: 1, duration: 1, ease: 'back.out(1.3)', stagger: 0.14,
     scrollTrigger: { trigger: track, start: 'top 80%', once: true },
-    onComplete: () => signal(track),
+    onComplete: () => { signal(track); tilt(cards); },
   });
 }
 
-// Kartlar oturunca turkuaz bir sinyal 1'den 4'e akar; uğradığı kartın numarası hafifçe zıplar. Bir kez oynar.
+// Fareyle kartın üstünde gezinince kart hafifçe yöne doğru eğilir ve kalkar
+function tilt(cards: HTMLElement[]) {
+  if (!window.matchMedia('(pointer: fine)').matches) return;
+  cards.forEach((c) => {
+    gsap.set(c, { transformPerspective: 900 });
+    const rx = gsap.quickTo(c, 'rotationX', { duration: 0.5, ease: 'power3' });
+    const ry = gsap.quickTo(c, 'rotationY', { duration: 0.5, ease: 'power3' });
+    const ty = gsap.quickTo(c, 'y', { duration: 0.5, ease: 'power3' });
+    const num = c.querySelector('.step-no');
+    c.addEventListener('pointermove', (e) => {
+      const r = c.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - 0.5, py = (e.clientY - r.top) / r.height - 0.5;
+      ry(px * 10); rx(-py * 8); ty(-8);
+      gsap.to(num, { x: px * 14, y: py * 10, duration: 0.5, overwrite: 'auto' });
+    });
+    c.addEventListener('pointerleave', () => { rx(0); ry(0); ty(0); gsap.to(num, { x: 0, y: 0, duration: 0.6 }); });
+    c.addEventListener('pointerenter', () => drawIcon(c, 0.6));
+  });
+}
+
+// Bir kartın ikonunu çizerek canlandır
+function drawIcon(card: HTMLElement, speed = 1) {
+  const ic = card.querySelector('.step-ic');
+  if (!ic) return;
+  const tl = gsap.timeline();
+  ic.querySelectorAll<SVGGeometryElement>('.d').forEach((p, j) => {
+    if (p.classList.contains('dash')) tl.fromTo(p, { opacity: 0 }, { opacity: 1, duration: 0.5 * speed }, j * 0.08);
+    else { const len = Math.ceil(p.getTotalLength?.() ?? 200); tl.fromTo(p, { strokeDashoffset: len }, { strokeDashoffset: 0, duration: 0.7 * speed, ease: 'power2.out' }, j * 0.12 * speed); }
+  });
+  tl.fromTo(ic.querySelectorAll('.bar'), { opacity: 1, scaleY: 0, transformOrigin: '50% 100%' }, { scaleY: 1, duration: 0.6 * speed, ease: 'back.out(1.8)', stagger: 0.1 }, 0.05);
+  tl.fromTo(ic.querySelectorAll('.pop'), { opacity: 1, scale: 0, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.45 * speed, ease: 'back.out(3)', stagger: 0.25 }, 0.1);
+  tl.fromTo(ic.querySelectorAll('.star'), { opacity: 1, rotate: -120, scale: 0, transformOrigin: '50% 50%' }, { rotate: 0, scale: 1, duration: 0.7 * speed, ease: 'back.out(2)' }, 0.35 * speed);
+  // Sohbet noktaları "yazıyor" gibi zıplar
+  tl.fromTo(ic.querySelectorAll('.dot'), { opacity: 1, y: 0 }, { y: -4, duration: 0.22, yoyo: true, repeat: 3, ease: 'sine.inOut', stagger: 0.1 }, 0.4 * speed);
+}
+
+// Kartlar oturunca turkuaz bir sinyal 1'den 4'e akar; uğradığı kart parlar, numarası zıplar, ikonu çizilir. Bir kez oynar.
 function signal(track: HTMLElement) {
   const line = track.parentElement?.querySelector<HTMLElement>('.steps-line');
   const cards = [...track.children] as HTMLElement[];
   const nums = cards.map((c) => c.querySelector('.step-no'));
+  const D = 2.2;
   const tl = gsap.timeline();
   if (line && getComputedStyle(line).display !== 'none') {
-    tl.fromTo(line, { '--draw': 0 }, { '--draw': 1, duration: 1.6, ease: 'none' }, 0);
-    tl.fromTo(line.querySelector('.steps-dot'), { left: '0%', opacity: 1 }, { left: '100%', duration: 1.6, ease: 'none' }, 0);
-    tl.to(line.querySelector('.steps-dot'), { opacity: 0, duration: 0.3 }, 1.6);
+    tl.fromTo(line, { '--draw': 0 }, { '--draw': 1, duration: D, ease: 'none' }, 0);
+    tl.fromTo(line.querySelector('.steps-dot'), { left: '0%', opacity: 1 }, { left: '100%', duration: D, ease: 'none' }, 0);
+    tl.to(line.querySelector('.steps-dot'), { scale: 2.2, opacity: 0, duration: 0.5 }, D);
   }
   cards.forEach((c, i) => {
-    const t = 1.6 * (0.125 + 0.25 * i) - 0.1; // nokta kartın ortasına gelirken
-    tl.fromTo(nums[i], { scale: 1 }, { scale: 1.16, duration: 0.22, ease: 'power2.out', yoyo: true, repeat: 1, transformOrigin: 'left bottom' }, t);
-    tl.fromTo(c, { '--glow': 0 }, { '--glow': 1, duration: 0.3, yoyo: true, repeat: 1, ease: 'sine.inOut' }, t);
+    const t = D * (0.125 + 0.25 * i) - 0.1; // nokta kartın ortasına gelirken
+    tl.fromTo(nums[i], { scale: 1 }, { scale: 1.2, duration: 0.25, ease: 'power2.out', yoyo: true, repeat: 1, transformOrigin: 'left bottom' }, t);
+    tl.fromTo(c, { '--glow': 0 }, { '--glow': 1, duration: 0.35, yoyo: true, repeat: 1, ease: 'sine.inOut' }, t);
+    tl.add(() => drawIcon(c), t);
   });
 }
 
