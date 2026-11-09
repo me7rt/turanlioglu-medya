@@ -1,0 +1,25 @@
+name: Revize isteği
+description: Sitede değişmesini istediğin bir şey
+title: "Revize: "
+labels: [revize]
+assignees: [me7rt]
+body:
+  - type: input
+    id: sayfa
+    attributes:
+      label: Hangi sayfa?
+      placeholder: ör. Ana sayfa, /hizmetler/web-tasarim/
+    validations:
+      required: true
+  - type: textarea
+    id: ne
+    attributes:
+      label: Ne değişsin?
+      description: Ekran görüntüsü yapıştırabilirsin.
+    validations:
+      required: true
+  - type: dropdown
+    id: tur
+    attributes:
+      label: Tür
+      options: [Görsel, Metin, Tasarım, Teknik, Diğer]
