@@ -9,7 +9,8 @@ import * as fx from './fx';
 gsap.registerPlugin(ScrollTrigger);
 
 const root = document.documentElement;
-const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+// Hareket tercihi <head> içindeki küçük betikle belirlenir (varsayılan: açık)
+const reduce = root.classList.contains('no-motion');
 const fine = window.matchMedia('(pointer: fine)').matches;
 const EASE = 'power3.out';
 

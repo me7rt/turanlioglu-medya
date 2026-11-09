@@ -66,11 +66,15 @@ const robots = isPreview || noindex ? 'noindex, nofollow' : 'index, follow, max-
   <head>
     <meta charset="utf-8" />
     <script is:inline>
-      // Hareket açıksa başlangıç gizlemelerini etkinleştir; 3 sn içinde hazır olmazsa her şeyi göster.
-      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        document.documentElement.classList.add('anim');
-        setTimeout(function () { document.documentElement.classList.add('anim-ready'); }, 3000);
-      }
+      // Hareket varsayılan olarak AÇIK. Ziyaretçi sağ alttaki düğmeyle kapatabilir (tercih tarayıcıda saklanır).
+      // Not: cihazda "hareketi azalt" açık olsa da animasyonlar gösterilir; durdurma düğmesi WCAG 2.2.2'yi karşılar.
+      (function () {
+        var d = document.documentElement, pref = null;
+        try { pref = localStorage.getItem('hareket'); } catch (e) {}
+        if (pref === 'kapali') { d.classList.add('no-motion'); return; }
+        d.classList.add('motion', 'anim');
+        setTimeout(function () { d.classList.add('anim-ready'); }, 3000);
+      })();
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
@@ -116,6 +120,23 @@ const robots = isPreview || noindex ? 'noindex, nofollow' : 'index, follow, max-
       <slot />
     </main>
     <Footer />
+    <button class="motion-toggle" type="button" data-motion-toggle aria-pressed="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
+      <span>Hareketi durdur</span>
+    </button>
     <script>import '../scripts/motion';</script>
+    <script>
+      const t = document.querySelector<HTMLButtonElement>('[data-motion-toggle]');
+      const off = document.documentElement.classList.contains('no-motion');
+      if (t) {
+        t.setAttribute('aria-pressed', String(off));
+        t.querySelector('span')!.textContent = off ? 'Hareketi başlat' : 'Hareketi durdur';
+        if (off) t.querySelector('svg')!.innerHTML = '<path fill="currentColor" d="M8 5l11 7-11 7z"/>';
+        t.addEventListener('click', () => {
+          try { localStorage.setItem('hareket', off ? 'acik' : 'kapali'); } catch (e) {}
+          location.reload();
+        });
+      }
+    </script>
   </body>
 </html>

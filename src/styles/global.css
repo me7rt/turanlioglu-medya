@@ -202,9 +202,7 @@ p { margin: 0 0 1em; max-width: 68ch; text-wrap: pretty; }
 .cta-band p { font-size: var(--fs-1); }
 @media (max-width: 820px) { .cta-band .wrap { grid-template-columns: 1fr; } }
 
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
-}
+.no-motion *, .no-motion *::before, .no-motion *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
 
 /* ================= HAREKET ================= */
 /* Başlangıçta gizlenecekler sadece .anim varken gizlenir (JS yoksa her şey görünür) */
@@ -239,10 +237,8 @@ p { margin: 0 0 1em; max-width: 68ch; text-wrap: pretty; }
 .mq-star { width: 0.5em; height: 0.5em; flex: none; color: var(--turkuaz); }
 .mq-row.fill .mq-star { color: var(--petrol); }
 /* JS yoksa / hareket azaltma: CSS ile yavaş akış (hareket azaltmada hiç akmaz) */
-@media (prefers-reduced-motion: no-preference) {
-  .mq-row:not(.js-driven) .mq-track { animation: mq 60s linear infinite; }
-  .mq-row[data-marquee='right']:not(.js-driven) .mq-track { animation-direction: reverse; }
-}
+.motion .mq-row:not(.js-driven) .mq-track { animation: mq 60s linear infinite; }
+.motion .mq-row[data-marquee='right']:not(.js-driven) .mq-track { animation-direction: reverse; }
 @keyframes mq { to { transform: translate3d(-50%, 0, 0); } }
 
 /* Kaydırmayla çizilen çizgi: --line 0→1 */
@@ -293,9 +289,7 @@ p { margin: 0 0 1em; max-width: 68ch; text-wrap: pretty; }
 .btn--ghost:hover, .btn:hover { color: var(--beyaz); }
 .btn--turkuaz::before { background: conic-gradient(from 0deg, var(--turkuaz), var(--beyaz), var(--turkuaz-2), var(--turkuaz)); }
 .btn--turkuaz:hover { color: var(--petrol); }
-@media (prefers-reduced-motion: no-preference) {
-  .btn::before { animation: aurora 5s linear infinite; }
-}
+.motion .btn::before { animation: aurora 5s linear infinite; }
 @keyframes aurora { to { rotate: 360deg; } }
 
 /* Sayfa geçişi: eski sayfa odaktan düşer, yeni sayfa odağa gelir (Chrome/Edge/Safari 18+) */
@@ -306,9 +300,7 @@ p { margin: 0 0 1em; max-width: 68ch; text-wrap: pretty; }
 ::view-transition-group(site-header) { animation: none; z-index: 100; }
 @keyframes vt-out { to { opacity: 0; filter: blur(9px); transform: scale(1.015); } }
 @keyframes vt-in { from { opacity: 0; filter: blur(11px); transform: scale(0.99) translateY(12px); } }
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
-}
+.no-motion::view-transition-old(root), .no-motion::view-transition-new(root) { animation: none; }
 
 /* ================= YARATICI EFEKTLER (2. tur) ================= */
 /* Su yüzeyi */
@@ -359,3 +351,14 @@ h1.loose .w { overflow: visible; }
 
 /* Şifre çözme başlıkları: genişlik zıplamasın */
 [data-scramble] span { font-variant-numeric: tabular-nums; }
+
+/* Hareket aç/kapat düğmesi */
+.motion-toggle {
+  position: fixed; right: 16px; bottom: 16px; z-index: 120;
+  display: inline-flex; align-items: center; gap: 0.5rem; min-height: 44px; padding: 0.6rem 1rem;
+  font: 600 0.85rem/1 var(--font-text); color: var(--petrol); background: var(--beyaz);
+  border: 2px solid var(--petrol); border-radius: 999px; cursor: pointer;
+  box-shadow: 0 6px 18px rgb(6 42 45 / 0.15);
+}
+.motion-toggle:hover { background: var(--turkuaz); }
+.motion-toggle svg { width: 16px; height: 16px; }
