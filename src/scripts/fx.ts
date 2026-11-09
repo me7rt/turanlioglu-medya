@@ -158,25 +158,17 @@ export function grow() {
   });
 }
 
-// ============ 5. Süreç: kartlar kaydırdıkça kendiliğinden yana kayar (ekranı tutmaz) ============
+// ============ 5. Süreç kartları: renkli kartlar, girişte yerine oturur (yana kayma yok) ============
 export function horizontal(track: HTMLElement | null) {
   if (!track) return;
-  // Telefonda kartlar alt alta: yana kaydırmada okunmuyor
-  if (window.matchMedia('(max-width: 700px)').matches) return;
   track.classList.add('hscroll');
   const section = track.closest('section')!;
   section.classList.add('hscroll-section');
-  const dist = () => Math.max(0, track.scrollWidth - track.clientWidth + 40);
-  // Mert: 4 kart da okunabilsin. Kartlar dar, kayma kısa ve kartlar ekrandayken yavaşça olur.
-  gsap.fromTo(track, { x: 0 }, {
-    x: () => -dist(), ease: 'none',
-    scrollTrigger: { trigger: track, start: 'top 38%', end: 'top 0%', scrub: 1, invalidateOnRefresh: true },
-  });
-  [...track.children].forEach((card, i) => {
-    gsap.fromTo(card, { rotate: i % 2 ? 5 : -5, y: 60 }, {
-      rotate: 0, y: 0, ease: 'none',
-      scrollTrigger: { trigger: track, start: 'top 100%', end: 'top 60%', scrub: 0.3 },
-    });
+  // Mert: kaydırma hiçbir yerde "durmuş gibi" hissettirmesin. Kartlar yana kaymaz, yan yana sabit durur;
+  // sadece ekrana girerken eğik ve aşağıdan gelip yerine oturur.
+  gsap.fromTo(track.children, { rotate: (i) => (i % 2 ? 5 : -5), y: 60, opacity: 0 }, {
+    rotate: 0, y: 0, opacity: 1, duration: 0.9, ease: 'power3.out', stagger: 0.12,
+    scrollTrigger: { trigger: track, start: 'top 80%', once: true },
   });
 }
 
