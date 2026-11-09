@@ -100,7 +100,7 @@ const lit = new Set([2, 6, 9]);
   .hs :global(.hs-chip)::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--turkuaz-700); box-shadow: 0 0 0 3px var(--turkuaz); }
 
   :global(.motion) .hs {
-    &.live .hs-pings circle { animation: hs-ping 3.6s cubic-bezier(0.2, 0.6, 0.3, 1) infinite; }
+    &.live .hs-pings circle { animation: hs-ping 3.6s cubic-bezier(0.2, 0.6, 0.3, 1) infinite; /* yalnızca ağ canlıyken (bkz. idle) */ }
     &.live .hs-pings circle:nth-child(2) { animation-delay: 1.2s; }
     &.live .hs-pings circle:nth-child(3) { animation-delay: 2.4s; }
     &.paused .hs-pings circle { animation-play-state: paused; }
@@ -241,8 +241,15 @@ const lit = new Set([2, 6, 9]);
       root.classList.toggle('paused', !v);
       if (v) { last = performance.now(); requestAnimationFrame(frame); }
     }
-    new IntersectionObserver(([e]) => setRunning(e.isIntersecting && !document.hidden)).observe(root);
-    document.addEventListener('visibilitychange', () => setRunning(!document.hidden));
+    // Kendi kendine en fazla 5 sn oynar; sonra ziyaretçi imleci oynatınca, dokununca ya da kaydırınca yeniden canlanır.
+    // Böylece "durdur" düğmesi olmadan WCAG 2.2.2 karşılanır.
+    let visible = true, wakeUntil = performance.now() + 5000;
+    const sync = () => setRunning(visible && !document.hidden && performance.now() < wakeUntil);
+    const wake = () => { wakeUntil = performance.now() + 2500; sync(); };
+    setInterval(sync, 500);
+    ['pointermove', 'pointerdown', 'scroll', 'wheel', 'keydown'].forEach((ev) => window.addEventListener(ev, wake, { passive: true }));
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; sync(); }).observe(root);
+    document.addEventListener('visibilitychange', sync);
     reduce.addEventListener('change', () => { if (reduce.matches) setRunning(false); });
     requestAnimationFrame(frame);
   });

@@ -334,7 +334,6 @@ h1.loose .w { overflow: visible; }
 /* Şifre çözme başlıkları: genişlik zıplamasın */
 [data-scramble] span { font-variant-numeric: tabular-nums; }
 
-.footer-link { background: none; border: 0; padding: 0; font: inherit; color: var(--beyaz); text-decoration: underline; text-underline-offset: 0.2em; cursor: pointer; }
 
 /* İmleçten yayılan sinyal halkaları */
 .fx-rings { position: fixed; inset: 0; z-index: 150; pointer-events: none; }
@@ -366,7 +365,7 @@ body::after {
 .motion .arcs path:nth-child(2) { animation-delay: 0.15s; }
 .motion .arcs path:nth-child(3) { animation-delay: 0.3s; }
 .motion .arcs path:nth-child(4) { animation-delay: 0.45s; }
-.motion .arcs circle { animation: arc-pulse 4s ease-in-out infinite; transform-origin: 0 600px; }
+.motion .arcs circle { animation: arc-pulse 4s ease-in-out 1; transform-origin: 0 600px; }
 @keyframes arc-draw { from { stroke-dashoffset: 900; } }
 @keyframes arc-pulse { 50% { transform: scale(1.35); opacity: 0.5; } }
 
@@ -379,9 +378,6 @@ body::after {
 }
 .badge > svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .badge text { font: 600 14.5px var(--font-text); letter-spacing: 0.08em; fill: currentColor; }
-.motion .badge > svg { animation: spin 16s linear infinite; }
-.badge:hover > svg { animation-duration: 5s; }
-@keyframes spin { to { rotate: 360deg; } }
 .badge-core {
   width: 40%; aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center;
   background: var(--turkuaz); color: var(--petrol); transition: transform 0.5s var(--ease);
@@ -416,7 +412,6 @@ body::after {
     radial-gradient(30% 40% at 10% 100%, rgb(48 213 200 / 0.22), transparent 70%),
     radial-gradient(25% 30% at 55% 60%, rgb(27 111 103 / 0.35), transparent 70%);
 }
-.motion .ph-glow { animation: glow-drift 14s ease-in-out infinite alternate; }
 @keyframes glow-drift { to { transform: translate3d(-4%, 3%, 0) scale(1.08); } }
 .ph-arcs { right: -2%; bottom: -2%; width: min(62vw, 620px); height: auto; transform: scaleX(-1); z-index: -1; }
 .page-hero--turkuaz { background: var(--turkuaz); color: var(--petrol); }

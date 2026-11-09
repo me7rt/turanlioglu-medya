@@ -67,8 +67,8 @@ const robots = isPreview || noindex ? 'noindex, nofollow' : 'index, follow, max-
   <head>
     <meta charset="utf-8" />
     <script is:inline>
-      // Hareket varsayılan olarak AÇIK. Ziyaretçi sağ alttaki düğmeyle kapatabilir (tercih tarayıcıda saklanır).
-      // Not: cihazda "hareketi azalt" açık olsa da animasyonlar gösterilir; durdurma düğmesi WCAG 2.2.2'yi karşılar.
+      // Hareket varsayılan olarak AÇIK. Kendi kendine 5 sn'den uzun dönen bir şey yok: sürekli hareketler
+      // kaydırmaya ya da imlece bağlı (WCAG 2.2.2 düğmesiz karşılanır).
       (function () {
         var d = document.documentElement, pref = null;
         try { pref = localStorage.getItem('hareket'); } catch (e) {}
@@ -124,18 +124,5 @@ const robots = isPreview || noindex ? 'noindex, nofollow' : 'index, follow, max-
     </main>
     <Footer />
     <script>import '../scripts/motion';</script>
-    <script>
-      const t = document.querySelector<HTMLButtonElement>('[data-motion-toggle]');
-      // Düğme footer'da (WCAG 2.2.2: hareketli içeriği durdurma imkânı)
-      const off = document.documentElement.classList.contains('no-motion');
-      if (t) {
-        t.setAttribute('aria-pressed', String(off));
-        t.textContent = off ? 'Animasyonları aç' : 'Animasyonları kapat';
-        t.addEventListener('click', () => {
-          try { localStorage.setItem('hareket', off ? 'acik' : 'kapali'); } catch (e) {}
-          location.reload();
-        });
-      }
-    </script>
   </body>
 </html>

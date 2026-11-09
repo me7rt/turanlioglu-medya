@@ -54,6 +54,7 @@ function init() {
   if (fine) { cursor(); servicePreview(); magnetic(); fx.rings(); }
   ScrollTrigger.refresh();
   scrollHint();
+  scrollLoops();
 
   root.classList.add('anim-ready');
 }
@@ -281,9 +282,23 @@ function magnetic() {
 function scrollHint() {
   const hint = document.querySelector<HTMLElement>('[data-scroll-hint]');
   if (!hint) return;
-  gsap.to(hint.querySelector('svg'), { y: 6, duration: 0.9, ease: 'sine.inOut', repeat: -1, yoyo: true });
+  gsap.to(hint.querySelector('svg'), { y: 6, duration: 0.9, ease: 'sine.inOut', repeat: 3, yoyo: true });
   ScrollTrigger.create({
     start: 80, onEnter: () => gsap.to(hint, { opacity: 0, y: 10, duration: 0.3 }),
     onLeaveBack: () => gsap.to(hint, { opacity: 1, y: 0, duration: 0.5, ease: EASE }),
+  });
+}
+
+// Sürekli dönen süsler kendi kendine değil, kaydırmayla hareket eder (WCAG 2.2.2: düğmesiz)
+function scrollLoops() {
+  const page = { trigger: document.documentElement, start: 0, end: 'max', scrub: 0.6 };
+  gsap.utils.toArray<SVGElement>('.badge > svg').forEach((el) => {
+    gsap.to(el, { rotate: 540, ease: 'none', scrollTrigger: page });
+  });
+  gsap.utils.toArray<HTMLElement>('.ph-glow, .hero-glow, .stage-glow').forEach((el) => {
+    gsap.fromTo(el, { xPercent: 0, yPercent: 0, scale: 1 }, {
+      xPercent: -5, yPercent: 6, scale: 1.1, ease: 'none',
+      scrollTrigger: { trigger: el.parentElement, start: 'top top', end: 'bottom top', scrub: 0.8 },
+    });
   });
 }

@@ -158,7 +158,6 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
       radial-gradient(35% 45% at 90% 10%, rgb(255 255 255 / 0.5), transparent 70%),
       radial-gradient(40% 50% at 0% 90%, rgb(48 213 200 / 1), transparent 70%),
       radial-gradient(30% 35% at 45% 40%, rgb(201 244 238 / 0.55), transparent 70%); }
-  :global(.motion) .hero-glow { animation: glow-drift 12s ease-in-out infinite alternate; }
   .hero :global(.hero-arcs) { left: -3%; bottom: 0; width: min(55vw, 560px); z-index: 0; }
   .hero-photo-wrap { position: relative; }
   .hero-badge-row { position: absolute; left: 0; right: 0; top: 0; display: flex; justify-content: flex-end; pointer-events: none; z-index: 2; }

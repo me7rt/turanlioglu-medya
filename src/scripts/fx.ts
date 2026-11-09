@@ -236,14 +236,14 @@ export function rings() {
   });
 }
 
-// ============ 8. Hizmet gezgini: üzerine gelince sağdaki panel değişir, kendiliğinden de döner ============
+// ============ 8. Hizmet gezgini: üzerine gelince ya da kaydırdıkça sağdaki panel değişir ============
 export function explorer(root: HTMLElement | null) {
   if (!root) return;
   root.classList.add('js');
   const items = [...root.querySelectorAll<HTMLElement>('.ex-list > li')];
   const slides = [...root.querySelectorAll<HTMLElement>('.ex-slide')];
   const panel = root.querySelector<HTMLElement>('.ex-panel');
-  let active = 0, progress: gsap.core.Tween | null = null, hovering = false, inView = false;
+  let active = 0, hovering = false;
 
   function show(i: number, instant = false) {
     if (i === active && !instant) return;
@@ -260,25 +260,25 @@ export function explorer(root: HTMLElement | null) {
     }
     active = i;
   }
-  function autoplay() {
-    progress?.kill();
-    if (hovering || !inView) return;
-    const o = { p: 0 };
-    progress = gsap.to(o, {
-      p: 1, duration: 4.5, ease: 'none',
-      onUpdate: () => items[active].style.setProperty('--p', o.p.toFixed(3)),
-      onComplete: () => { show((active + 1) % items.length); autoplay(); },
-    });
-  }
   items.forEach((li, i) => {
     const a = li.querySelector('a')!;
     const go = () => { show(i); items[i].style.setProperty('--p', '1'); };
     a.addEventListener('pointerenter', go);
     a.addEventListener('focus', go);
   });
-  root.addEventListener('pointerenter', () => { hovering = true; progress?.kill(); items[active].style.setProperty('--p', '1'); });
-  root.addEventListener('pointerleave', () => { hovering = false; autoplay(); });
-  new IntersectionObserver(([e]) => { inView = e.isIntersecting; if (inView) autoplay(); else progress?.kill(); }, { threshold: 0.35 }).observe(root);
+  root.addEventListener('pointerenter', () => { hovering = true; items[active].style.setProperty('--p', '1'); });
+  root.addEventListener('pointerleave', () => { hovering = false; });
+  // Kendiliğinden dönmez: sayfayı kaydırdıkça sıradaki hizmete geçer (ekranı tutmaz)
+  ScrollTrigger.create({
+    trigger: root, start: 'top 65%', end: 'bottom 15%',
+    onUpdate: (st) => {
+      if (hovering) return;
+      const f = st.progress * items.length;
+      const i = Math.min(items.length - 1, Math.floor(f));
+      show(i);
+      items[i].style.setProperty('--p', Math.min(1, f - i).toFixed(3));
+    },
+  });
   // Panelde imlece göre hafif 3B eğim
   if (panel) {
     const rx = gsap.quickTo(panel, 'rotationY', { duration: 0.6, ease: 'power3' });
