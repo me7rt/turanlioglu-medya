@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Img from '../components/Img.astro';
+import HeroSignal from '../components/HeroSignal.astro';
 import Faq from '../components/Faq.astro';
 import CtaBand from '../components/CtaBand.astro';
 import { site, services, faq, process } from '../data/site';
@@ -25,12 +26,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
           <a class="btn btn--ghost" href={url('/hizmetler/')}>Hizmetleri incele</a>
         </div>
       </div>
-      <svg class="signal" viewBox="0 0 400 400" aria-hidden="true" focusable="false">
-        <circle class="core" cx="120" cy="280" r="70" />
-        <path class="ring r1" d="M120 150a130 130 0 0 1 130 130" />
-        <path class="ring r2" d="M120 80a200 200 0 0 1 200 200" />
-        <path class="ring r3" d="M120 10a270 270 0 0 1 270 270" />
-      </svg>
+      <HeroSignal />
     </div>
   </section>
 
@@ -127,28 +123,13 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 <style>
   .hero { background: var(--turkuaz); overflow: hidden; }
   .hero-grid {
-    display: grid; grid-template-columns: 1.5fr 1fr; align-items: end; gap: 2rem;
+    display: grid; grid-template-columns: 1.25fr 1fr; align-items: center; gap: 2rem;
     padding-block: clamp(3.5rem, 2rem + 6vw, 8rem) clamp(5rem, 4rem + 6vw, 10rem);
   }
   .hero h1 { font-size: var(--fs-5); line-height: 0.92; letter-spacing: -0.04em; margin-bottom: 0.4em; font-variation-settings: 'wdth' 85; }
   .hero-lead { font-size: var(--fs-1); max-width: 46ch; }
   .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
   .hero .btn--ghost:hover { background: var(--petrol); }
-
-  /* Tek imza an: sinyal halkaları sayfa açılışında sırayla yayılır */
-  .signal { width: 100%; max-width: 420px; justify-self: end; overflow: visible; }
-  .signal .core { fill: var(--petrol); }
-  .signal .ring { fill: none; stroke: var(--petrol); stroke-width: 22; stroke-linecap: round; }
-  .signal .r2 { stroke: var(--beyaz); }
-  .signal .r3 { stroke: var(--turkuaz-2); stroke: color-mix(in srgb, var(--petrol) 22%, var(--turkuaz)); }
-  @media (prefers-reduced-motion: no-preference) {
-    .signal .ring { stroke-dasharray: 500; stroke-dashoffset: 500; animation: yay 1.1s var(--ease) forwards; }
-    .signal .r2 { animation-delay: 0.18s; }
-    .signal .r3 { animation-delay: 0.36s; }
-    .signal .core { transform-origin: 120px 280px; animation: nabiz 0.7s var(--ease) both; }
-    @keyframes yay { to { stroke-dashoffset: 0; } }
-    @keyframes nabiz { from { transform: scale(0.6); opacity: 0; } }
-  }
 
   .hero-photo { margin-top: clamp(-5rem, -3rem - 4vw, -3rem); position: relative; }
 
@@ -195,7 +176,6 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 
   @media (max-width: 900px) {
     .hero-grid, .work-grid, .faq-grid { grid-template-columns: 1fr; }
-    .signal { max-width: 220px; justify-self: start; order: -1; }
     .steps { grid-template-columns: 1fr 1fr; }
     .post-list { grid-template-columns: 1fr; }
   }

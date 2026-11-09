@@ -1,0 +1,249 @@
+---
+// Ana sayfa giriş animasyonu — metafor: "marka sinyali insanlara ulaşır, insanlar geri döner".
+// Merkezdeki turkuaz çekirdek = marka. Etrafındaki düğümler = kitle (takipçi, arayan, alışveriş yapan,
+// yapay zekâ asistanı...). Sinyal çekirdekten düğüme gider, düğüm yanar ve bir tepki etiketi çıkar;
+// bazen tepki çekirdeğe geri akar (etkileşim → dönüşüm). İmleç yaklaştıkça düğümler ona doğru hafifçe çekilir.
+// Kütüphane yok, saf SVG + JS (~3 KB). Hareket azaltma tercihinde sabit bir kare gösterilir.
+// Ekran dışındayken ya da sekme gizliyken durur.
+
+const W = 520, H = 520, CX = 250, CY = 270;
+type Kind = 'heart' | 'chat' | 'user' | 'search' | 'cart' | 'play' | 'spark' | 'mail';
+const orbit = (r: number, kinds: Kind[], start: number) =>
+  kinds.map((k, i) => {
+    const a = start + (i / kinds.length) * Math.PI * 2;
+    return { k, x: Math.round(CX + Math.cos(a) * r), y: Math.round(CY + Math.sin(a) * r * 0.92), r: r > 150 ? 21 : 18 };
+  });
+const nodes = [
+  ...orbit(118, ['heart', 'search', 'chat', 'play', 'user'], -1.2),
+  ...orbit(212, ['spark', 'cart', 'user', 'mail', 'heart', 'search', 'chat', 'play'], -0.9),
+];
+// Statik (hareket azaltma / JS yok) karede yanık görünecek düğümler
+const lit = new Set([2, 6, 9]);
+---
+<div class="hs" data-hero-signal data-cx={CX} data-cy={CY} data-w={W} data-h={H} aria-hidden="true">
+  <svg viewBox={`0 0 ${W} ${H}`} focusable="false">
+    <defs>
+      <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></symbol>
+      <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16v10H10l-5 4v-4H4z"/></symbol>
+      <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M5 20c0-3.9 3.1-6 7-6s7 2.1 7 6"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="5.5"/><path d="M15.2 15.2 20 20"/></symbol>
+      <symbol id="i-cart" viewBox="0 0 24 24"><path d="M3 5h2.5l2 10h10l2-7H6.6"/><circle cx="9" cy="19" r="1.3"/><circle cx="17" cy="19" r="1.3"/></symbol>
+      <symbol id="i-play" viewBox="0 0 24 24"><path d="M8.5 5.5 18.5 12l-10 6.5z"/></symbol>
+      <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3.5l1.9 5.6 5.6 1.9-5.6 1.9L12 18.5l-1.9-5.6L4.5 11l5.6-1.9z"/></symbol>
+      <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3.5" y="6" width="17" height="12" rx="1.5"/><path d="m4 7 8 6 8-6"/></symbol>
+    </defs>
+
+    <g class="hs-pings">
+      <circle cx={CX} cy={CY} r="60" />
+      <circle cx={CX} cy={CY} r="60" />
+      <circle cx={CX} cy={CY} r="60" />
+    </g>
+    <g class="hs-orbits">
+      <ellipse cx={CX} cy={CY} rx="118" ry={118 * 0.92} />
+      <ellipse cx={CX} cy={CY} rx="212" ry={212 * 0.92} />
+    </g>
+    <g class="hs-links">
+      {nodes.map((n) => <line x1={CX} y1={CY} x2={n.x} y2={n.y} />)}
+    </g>
+    <g class="hs-pulses"></g>
+    <g class="hs-nodes">
+      {nodes.map((n, i) => (
+        <g class:list={['hs-node', { on: lit.has(i) }]} data-kind={n.k} data-x={n.x} data-y={n.y} transform={`translate(${n.x} ${n.y})`}>
+          <circle r={n.r} />
+          <use href={`#i-${n.k}`} x={-n.r * 0.55} y={-n.r * 0.55} width={n.r * 1.1} height={n.r * 1.1} />
+        </g>
+      ))}
+    </g>
+    <g class="hs-core">
+      <circle cx={CX} cy={CY} r="58" />
+      <path d={`M${CX - 22} ${CY + 18}a40 40 0 0 1 40 -40`} />
+      <path d={`M${CX - 22} ${CY - 2}a20 20 0 0 1 20 -20`} />
+      <circle cx={CX - 20} cy={CY + 16} r="7" />
+    </g>
+  </svg>
+  <div class="hs-chips">
+    <span class="hs-chip static" style="left:62%;top:14%">Yapay zekâ önerdi</span>
+    <span class="hs-chip static" style="left:4%;top:70%">Yeni takipçi</span>
+  </div>
+</div>
+
+<style>
+  .hs { position: relative; width: 100%; max-width: 560px; justify-self: end; aspect-ratio: 1; }
+  .hs svg { width: 100%; height: 100%; overflow: visible; display: block; }
+
+  .hs-pings circle { fill: none; stroke: var(--petrol); stroke-width: 2; opacity: 0; transform-box: fill-box; transform-origin: center; }
+  .hs-orbits ellipse { fill: none; stroke: var(--petrol); stroke-opacity: 0.18; stroke-width: 1.5; stroke-dasharray: 2 7; stroke-linecap: round; }
+  .hs-links line { stroke: var(--petrol); stroke-opacity: 0.16; stroke-width: 1.5; }
+
+  .hs-node circle { fill: var(--kagit); stroke: var(--petrol); stroke-width: 2.5; transition: fill 0.35s var(--ease), r 0.35s var(--ease); }
+  .hs-node use { fill: none; stroke: var(--petrol); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .hs-node.on circle { fill: var(--petrol); }
+  .hs-node.on use { stroke: var(--turkuaz); }
+
+  .hs-core circle:first-child { fill: var(--petrol); }
+  .hs-core path { fill: none; stroke: var(--turkuaz); stroke-width: 7; stroke-linecap: round; }
+  .hs-core circle:last-child { fill: var(--beyaz); }
+
+  /* Sinyal noktaları JS ile eklendiği için global seçici */
+  .hs-pulses :global(circle) { fill: var(--petrol); stroke: var(--beyaz); stroke-width: 2; }
+  .hs-pulses :global(circle.back) { fill: var(--beyaz); stroke: var(--petrol); }
+
+  .hs-chips { position: absolute; inset: 0; pointer-events: none; }
+  /* Etiketler JS ile eklendiği için global seçici */
+  .hs :global(.hs-chip) {
+    position: absolute; white-space: nowrap;
+    font: 600 0.85rem/1 var(--font-text); color: var(--petrol);
+    background: var(--beyaz); padding: 0.5rem 0.75rem 0.5rem 0.6rem; border-radius: 999px;
+    box-shadow: 0 6px 18px rgb(6 42 45 / 0.16), 0 0 0 1.5px var(--petrol);
+    display: inline-flex; align-items: center; gap: 0.4rem;
+  }
+  .hs :global(.hs-chip)::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--turkuaz-700); box-shadow: 0 0 0 3px var(--turkuaz); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hs.live .hs-pings circle { animation: hs-ping 3.6s cubic-bezier(0.2, 0.6, 0.3, 1) infinite; }
+    .hs.live .hs-pings circle:nth-child(2) { animation-delay: 1.2s; }
+    .hs.live .hs-pings circle:nth-child(3) { animation-delay: 2.4s; }
+    .hs.paused .hs-pings circle { animation-play-state: paused; }
+    @keyframes hs-ping { 0% { transform: scale(1); opacity: 0.45; } 100% { transform: scale(4.2); opacity: 0; } }
+    .hs :global(.hs-chip.pop) { animation: hs-chip 2.2s var(--ease) forwards; }
+    @keyframes hs-chip {
+      0% { opacity: 0; transform: translateY(8px) scale(0.9); }
+      12%, 78% { opacity: 1; transform: none; }
+      100% { opacity: 0; transform: translateY(-6px); }
+    }
+  }
+  @media (max-width: 900px) { .hs { max-width: 340px; justify-self: center; } .hs :global(.hs-chip) { font-size: 0.75rem; } }
+</style>
+
+<script>
+  const LABELS: Record<string, string[]> = {
+    heart: ['Beğeni', 'Kaydedildi'],
+    chat: ['Yeni mesaj', 'Yorum geldi'],
+    user: ['Yeni takipçi', 'Profil ziyareti'],
+    search: ['Google’da bulundu', 'Aramada çıktı'],
+    cart: ['Satış', 'Sepete eklendi'],
+    play: ['Video izlendi', 'Reels paylaşıldı'],
+    spark: ['Yapay zekâ önerdi', 'ChatGPT’de anıldı'],
+    mail: ['Teklif talebi', 'Form dolduruldu'],
+  };
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  document.querySelectorAll<HTMLElement>('[data-hero-signal]').forEach((root) => {
+    if (reduce.matches) return; // statik kare kalır
+    const svg = root.querySelector('svg')!;
+    const NS = 'http://www.w3.org/2000/svg';
+    const cx = +root.dataset.cx!, cy = +root.dataset.cy!, W = +root.dataset.w!;
+    const pulses = root.querySelector('.hs-pulses')!;
+    const chipLayer = root.querySelector('.hs-chips')!;
+    const links = [...root.querySelectorAll<SVGLineElement>('.hs-links line')];
+    const nodes = [...root.querySelectorAll<SVGGElement>('.hs-node')].map((el, i) => ({
+      el, kind: el.dataset.kind!, bx: +el.dataset.x!, by: +el.dataset.y!, x: +el.dataset.x!, y: +el.dataset.y!,
+      phase: i * 1.7, link: links[i],
+    }));
+
+    // Başlangıç: statik kareyi temizle, canlı moda geç
+    chipLayer.innerHTML = '';
+    nodes.forEach((n) => n.el.classList.remove('on'));
+    root.classList.add('live');
+
+    // İmleç çekimi (dokunmatikte devre dışı)
+    let px = cx, py = cy, pull = 0;
+    const fine = window.matchMedia('(pointer: fine)').matches;
+    if (fine) {
+      root.closest('section')?.addEventListener('pointermove', (e) => {
+        const r = svg.getBoundingClientRect();
+        px = ((e.clientX - r.left) / r.width) * W;
+        py = ((e.clientY - r.top) / r.height) * W;
+        pull = 1;
+      });
+      root.closest('section')?.addEventListener('pointerleave', () => { pull = 0; });
+    }
+
+    type Pulse = { el: SVGCircleElement; n: (typeof nodes)[number]; t: number; dur: number; back: boolean };
+    let active: Pulse[] = [];
+    let running = true, last = performance.now(), nextFire = 0, chips = 0;
+
+    function fire(now: number) {
+      const n = nodes[Math.floor(Math.random() * nodes.length)];
+      const el = document.createElementNS(NS, 'circle');
+      el.setAttribute('r', '5.5');
+      el.setAttribute('cx', String(cx)); el.setAttribute('cy', String(cy));
+      pulses.appendChild(el);
+      active.push({ el, n, t: 0, dur: 700 + Math.hypot(n.bx - cx, n.by - cy) * 2.2, back: false });
+      nextFire = now + 380 + Math.random() * 420;
+    }
+
+    function arrive(p: Pulse) {
+      const { n } = p;
+      n.el.classList.add('on');
+      setTimeout(() => n.el.classList.remove('on'), 1400);
+      // Tepki etiketi (aynı anda en fazla 2)
+      if (chips < 2 && Math.random() < 0.55) {
+        chips++;
+        const chip = document.createElement('span');
+        const opts = LABELS[n.kind];
+        chip.className = 'hs-chip pop';
+        chip.textContent = opts[Math.floor(Math.random() * opts.length)];
+        const left = (n.x / W) * 100, top = (n.y / W) * 100;
+        chip.style.left = `${Math.min(Math.max(left - 10, -4), 70)}%`;
+        chip.style.top = `${top < 50 ? top - 13 : top + 6}%`;
+        chipLayer.appendChild(chip);
+        chip.addEventListener('animationend', () => { chip.remove(); chips--; });
+      }
+      // Bazen tepki markaya geri döner: etkileşim → dönüşüm
+      if (Math.random() < 0.35) {
+        const el = document.createElementNS(NS, 'circle');
+        el.setAttribute('r', '5');
+        el.setAttribute('cx', String(n.x)); el.setAttribute('cy', String(n.y));
+        el.classList.add('back');
+        pulses.appendChild(el);
+        active.push({ el, n, t: 0, dur: p.dur * 0.8, back: true });
+      }
+    }
+
+    const ease = (t: number) => 1 - Math.pow(1 - t, 3);
+
+    function frame(now: number) {
+      if (!running) return;
+      const dt = Math.min(now - last, 50); last = now;
+      // Düğümler süzülür + imlece doğru hafifçe çekilir
+      const s = now / 1000;
+      nodes.forEach((n) => {
+        let tx = n.bx + Math.sin(s * 0.8 + n.phase) * 5;
+        let ty = n.by + Math.cos(s * 0.7 + n.phase) * 5;
+        if (pull) {
+          const dx = px - n.bx, dy = py - n.by, d = Math.hypot(dx, dy);
+          const f = Math.max(0, 1 - d / 260) * 26;
+          if (d > 1) { tx += (dx / d) * f; ty += (dy / d) * f; }
+        }
+        n.x += (tx - n.x) * Math.min(1, dt / 160);
+        n.y += (ty - n.y) * Math.min(1, dt / 160);
+        n.el.setAttribute('transform', `translate(${n.x.toFixed(1)} ${n.y.toFixed(1)})`);
+        n.link.setAttribute('x2', n.x.toFixed(1));
+        n.link.setAttribute('y2', n.y.toFixed(1));
+      });
+      if (now > nextFire) fire(now);
+      active = active.filter((p) => {
+        p.t += dt / p.dur;
+        const k = ease(Math.min(p.t, 1));
+        const [ax, ay, bx, by] = p.back ? [p.n.x, p.n.y, cx, cy] : [cx, cy, p.n.x, p.n.y];
+        p.el.setAttribute('cx', (ax + (bx - ax) * k).toFixed(1));
+        p.el.setAttribute('cy', (ay + (by - ay) * k).toFixed(1));
+        if (p.t >= 1) { p.el.remove(); if (!p.back) arrive(p); return false; }
+        return true;
+      });
+      requestAnimationFrame(frame);
+    }
+
+    function setRunning(v: boolean) {
+      if (v === running) return;
+      running = v;
+      root.classList.toggle('paused', !v);
+      if (v) { last = performance.now(); requestAnimationFrame(frame); }
+    }
+    new IntersectionObserver(([e]) => setRunning(e.isIntersecting && !document.hidden)).observe(root);
+    document.addEventListener('visibilitychange', () => setRunning(!document.hidden));
+    reduce.addEventListener('change', () => { if (reduce.matches) setRunning(false); });
+    requestAnimationFrame(frame);
+  });
+</script>
