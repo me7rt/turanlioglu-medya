@@ -28,7 +28,7 @@ Terim, 2023'te Princeton Üniversitesi ve ortak kurumlardan araştırmacıların
 
 ## GEO ile SEO arasındaki fark
 
-| | SEO | GEO |
+| Konu | SEO | GEO |
 |---|---|---|
 | Hedef | Arama sonuçlarında üst sıra | Yapay zekâ cevabında kaynak olmak |
 | Kullanıcı ne görür? | 10 mavi link | Tek bir yazılı cevap ve birkaç kaynak |

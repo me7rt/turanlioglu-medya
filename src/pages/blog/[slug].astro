@@ -45,7 +45,7 @@ const schema = [{
 >
   <article class="wrap article">
     <header class="article-head">
-      <p class="muted cat">{d.category}</p>
+      <p class="cat">{d.category}</p>
       <h1>{d.title}</h1>
       <p class="lead">{d.description}</p>
       <PostMeta date={d.date} updated={d.updated} author={d.author} />
@@ -89,20 +89,22 @@ const schema = [{
 <style>
   .article-head { padding-block: 2rem 2.5rem; max-width: 60rem; }
   .article-head h1 { font-size: var(--fs-4); }
-  .cat { font-weight: 600; margin-bottom: 0.75rem; }
+  .cat { margin-bottom: 0.75rem; }
   :global(.article-img) { margin-bottom: 3rem; }
   .article-body { display: grid; grid-template-columns: 240px minmax(0, 720px); gap: 4rem; padding-bottom: 5rem; }
   .toc nav { position: sticky; top: 96px; font-size: 0.95rem; }
   .toc-title { font-weight: 600; margin-bottom: 0.75rem; }
   .toc ol { margin: 0; padding-left: 1.1em; display: grid; gap: 0.5rem; }
   .toc a { text-decoration: none; color: var(--gri); }
-  .toc a:hover { color: var(--petrol); text-decoration: underline; }
+  .toc a:hover { color: var(--turkuaz-700); text-decoration: underline; }
+  .toc nav { border-left: 3px solid var(--turkuaz); padding-left: 1rem; }
   .summary { background: var(--turkuaz); padding: 1.5rem 1.75rem; border-radius: var(--radius); margin-bottom: 2.5rem; }
   .summary h2 { font-size: var(--fs-1); margin-bottom: 0.75rem; }
   .summary ul { margin: 0; padding-left: 1.2em; display: grid; gap: 0.6rem; }
   .post-faq { margin-top: 4rem; }
   .post-faq h2 { font-size: var(--fs-2); }
-  .author-box { margin-top: 3rem; padding: 1.5rem; border: 1px solid var(--cizgi); border-radius: var(--radius); background: var(--beyaz); }
+  .author-box { margin-top: 3rem; padding: 1.5rem; border-left: 6px solid var(--turkuaz); border-radius: var(--radius); background: var(--turkuaz-50); }
+  .author-box a { color: var(--turkuaz-700); font-weight: 600; }
   .author-box p { margin: 0; }
   @media (max-width: 960px) { .article-body { grid-template-columns: 1fr; gap: 0; } .toc { display: none; } }
 </style>

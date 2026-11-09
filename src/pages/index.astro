@@ -71,7 +71,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     </div>
   </section>
 
-  <section class="section" aria-labelledby="surec-baslik">
+  <section class="section process" aria-labelledby="surec-baslik">
     <div class="wrap">
       <div class="section-head">
         <h2 id="surec-baslik">Nasıl çalışıyoruz?</h2>
@@ -156,7 +156,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .section-head h2 { margin: 0; }
   .section-head .lead { margin: 0; max-width: 42ch; }
 
-  .service-list { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--petrol); }
+  .service-list { list-style: none; margin: 0; padding: 0; border-top: 4px solid var(--turkuaz); }
   .service-list li { border-bottom: 1px solid var(--cizgi); }
   .service-list a {
     display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) auto; gap: 1rem 3rem; align-items: center;
@@ -166,7 +166,8 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .service-list h3 { margin: 0; font-size: var(--fs-3); }
   .service-list p { margin: 0; color: var(--gri); }
   .service-list .more { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; border: 2px solid var(--petrol); transition: background 0.3s var(--ease); }
-  .service-list a:hover { background: var(--beyaz); padding-inline: 1.25rem; }
+  .service-list a:hover { background: var(--turkuaz-50); padding-inline: 1.25rem; }
+  .service-list a:hover h3 { color: var(--turkuaz-700); }
   .service-list a:hover .more { background: var(--turkuaz); border-color: var(--turkuaz); }
   @media (max-width: 820px) {
     .service-list a { grid-template-columns: 1fr auto; }
@@ -175,19 +176,20 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   }
 
   .work { background: var(--petrol); color: #d7ecea; }
-  .work h2 { color: var(--beyaz); }
+  .work h2 { color: var(--turkuaz); }
   .work-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: clamp(2rem, 5vw, 5rem); align-items: center; }
 
+  .process { background: var(--turkuaz-50); }
   .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; counter-reset: s; }
-  .steps li { border-top: 2px solid var(--petrol); padding-top: 1.25rem; }
-  .step-no { display: block; font-family: var(--font-display); font-size: var(--fs-4); font-weight: 700; line-height: 1; color: var(--turkuaz-2); -webkit-text-stroke: 1.5px var(--petrol); margin-bottom: 1rem; }
+  .steps li { border-top: 4px solid var(--turkuaz); padding-top: 1.25rem; }
+  .step-no { display: block; font-family: var(--font-display); font-size: var(--fs-4); font-weight: 700; line-height: 1; color: var(--turkuaz-700); margin-bottom: 1rem; }
   .steps h3 { font-size: var(--fs-1); }
   .steps p { color: var(--gri); }
 
   .post-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
   .post-list a { text-decoration: none; display: block; }
   .post-list h3 { font-size: var(--fs-2); margin-top: 1.25rem; }
-  .post-list a:hover h3 { text-decoration: underline; text-decoration-color: var(--turkuaz-2); text-decoration-thickness: 3px; }
+  .post-list a:hover h3 { color: var(--turkuaz-700); text-decoration: underline; text-decoration-color: var(--turkuaz); text-decoration-thickness: 3px; }
 
   .faq-grid { display: grid; grid-template-columns: 1fr 1.6fr; gap: 3rem; }
 
