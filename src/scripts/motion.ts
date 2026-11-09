@@ -15,7 +15,7 @@ const fine = window.matchMedia('(pointer: fine)').matches;
 const EASE = 'power3.out';
 
 // Mert: animasyonlar biraz geç gelsin, öğe ekranın ortasına yaklaşınca başlasın.
-const REVEAL_START = 'top 72%';
+const REVEAL_START = 'clamp(top 58%)'; // clamp: sayfa sonundaki öğeler de mutlaka görünür
 if (reduce) {
   root.classList.remove('anim');
 } else {
