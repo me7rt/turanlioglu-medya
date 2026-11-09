@@ -49,7 +49,7 @@ const word = 'Turanlıoğlu';
     </div>
   </div>
 
-  <p class="ft-mark" aria-hidden="true" data-ft-mark>{[...word].map((c) => <span>{c}</span>)}</p>
+  <p class="ft-mark" aria-hidden="true" data-ft-mark>{[...word].map((c) => <span class:list={{ 'g-sade': c === 'ğ' }}>{c}</span>)}</p>
 
   <div class="wrap ft-bottom-wrap"><div class="ft-bottom glass">
     <span>© {year} {site.name}</span>
@@ -136,6 +136,8 @@ const word = 'Turanlıoğlu';
     background: linear-gradient(180deg, var(--turkuaz) 15%, rgb(64 224 208 / 0.35) 100%); -webkit-background-clip: text; background-clip: text; color: transparent;
     transition: transform 0.5s var(--ease);
   }
+  /* Bricolage'ın iki katlı 'g'si yerine sade, tek katlı 'g' (Instrument Sans) */
+  .ft-mark .g-sade { font-family: var(--font-text); font-weight: 700; font-variation-settings: normal; letter-spacing: -0.04em; }
   .ft-mark span:hover { transform: translateY(-0.08em); }
 
   .ft-bottom-wrap { position: relative; z-index: 2; margin-top: 0.5rem; padding-bottom: 1.5rem; }
