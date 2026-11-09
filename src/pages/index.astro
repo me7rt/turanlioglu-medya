@@ -86,15 +86,17 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   </section>
 
   <section class="work on-dark" aria-labelledby="isler-baslik">
-    <WorkStrip />
-    <div class="work-veil">
-      <div class="work-text">
+    <div class="wrap work-head">
+      <div>
         <p class="kicker">Neler üretiyoruz</p>
         <h2 id="isler-baslik" data-scramble>Seçili işler</h2>
+      </div>
+      <div class="work-intro">
         <p>Şimdilik her hizmetten örnek ekranlar var. Gerçek müşteri projeleri; problem, yaklaşım ve ölçülen sonuçlarıyla buraya gelecek.</p>
         <p class="todo">[DOLDURULACAK: izin alınmış 3–4 gerçek proje]</p>
       </div>
     </div>
+    <WorkStrip />
   </section>
 
   <section class="section process" aria-labelledby="surec-baslik">
@@ -201,27 +203,16 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   }
 
   /* Seçili işler: şerit bölümü baştan sona kaplar; yazılar solda petrolden turkuaza açılan perdenin üstünde */
-  .work { position: relative; overflow: hidden; isolation: isolate; background: linear-gradient(90deg, var(--petrol) 25%, var(--petrol-2) 60%, var(--turkuaz-700) 100%); }
-  .work :global(.ws-scroller) { padding-block: clamp(5rem, 9vw, 9rem); mask-image: none; -webkit-mask-image: none; }
-  .work-veil {
-    position: absolute; inset: 0 auto 0 0; width: min(62%, 900px); z-index: 2; pointer-events: none;
-    display: flex; align-items: center;
-    background: linear-gradient(90deg,
-      rgb(6 42 45 / 0.92) 0%, rgb(6 42 45 / 0.84) 42%, rgb(13 63 67 / 0.62) 64%,
-      rgb(27 111 103 / 0.3) 82%, rgb(64 224 208 / 0) 100%);
-  }
-  .work-text { pointer-events: auto; width: 100%; padding-left: max(var(--gutter), calc((100vw - var(--max)) / 2 + var(--gutter))); padding-right: 2rem; color: #c9e2df; }
-  .work-text > * { max-width: 28rem; }
-  .work-text h2 { font-size: var(--fs-4); color: var(--beyaz); }
-  .work-text .todo { margin-bottom: 0; }
-  .work :global(.ws-cap) { color: var(--beyaz); text-shadow: 0 1px 8px rgb(6 42 45 / 0.6); }
+  /* Seçili işler: başlık üstte, kayan şerit altta ve bölümü baştan sona kaplar */
+  .work { position: relative; overflow: hidden; isolation: isolate; padding-top: clamp(4rem, 7vw, 7rem);
+    background: linear-gradient(90deg, var(--petrol) 0%, var(--petrol-2) 55%, var(--turkuaz-700) 100%); color: #c9e2df; }
+  .work-head { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem clamp(2rem, 6vw, 6rem); align-items: end; }
+  .work-head h2 { font-size: var(--fs-4); color: var(--beyaz); margin: 0; }
+  .work-intro p:last-child { margin-bottom: 0; }
+  .work :global(.ws-scroller) { padding-block: 3rem clamp(4rem, 6vw, 6rem); }
+  .work :global(.ws-cap) { color: var(--beyaz); }
   .work :global(.ws-card:hover .ws-cap) { color: var(--turkuaz); }
-  @media (max-width: 820px) {
-    .work { background: var(--petrol); display: flex; flex-direction: column-reverse; }
-    .work-veil { position: relative; width: 100%; background: linear-gradient(180deg, var(--petrol), rgb(6 42 45 / 0.6)); padding-top: 4rem; }
-    .work :global(.ws-scroller) { padding-block: 4rem 4rem; }
-    .work :global(.ws-row) { padding-left: var(--gutter); }
-  }
+  @media (max-width: 820px) { .work-head { grid-template-columns: 1fr; } }
 
   /* Hizmetler: koyu sahne */
   .stage { position: relative; overflow: hidden; isolation: isolate; background: var(--petrol); color: #c9e2df; }
