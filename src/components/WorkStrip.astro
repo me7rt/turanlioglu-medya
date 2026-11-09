@@ -1,7 +1,7 @@
 ---
 // Kendiliğinden kayan kart şeridi: tarayıcı + telefon çerçevesinde hizmet örnekleri.
 // Gerçek projeler gelince kartlar onlarla değişecek (uydurma müşteri/alan adı yok).
-// Fareyle üzerine gelinen kart büyür, şerit durur. Elle de kaydırılabilir. Durdurma düğmesi var (WCAG 2.2.2).
+// Fareyle üzerine gelinen kart büyür, şerit durur. Elle de kaydırılabilir.
 import Img from './Img.astro';
 import { services } from '../data/site';
 import { url } from '../lib/url';
@@ -23,12 +23,8 @@ import { url } from '../lib/url';
       )))}
     </ul>
   </div>
-  <button type="button" class="play-toggle" data-play-toggle aria-pressed="false" aria-label="Kart akışını durdur">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path class="i-pause" d="M8 5v14M16 5v14" /><path class="i-play" d="M7 5l12 7-12 7z" /></svg>
-  </button>
 </div>
 <style>
-  .ws :global(.play-toggle) { top: 1.5rem; bottom: auto; right: var(--gutter); }
   .ws { position: relative; }
   .ws-scroller {
     overflow-x: auto; overflow-y: hidden; padding-block: 2.5rem 1.5rem; scrollbar-width: thin; scrollbar-color: var(--turkuaz-700) transparent;

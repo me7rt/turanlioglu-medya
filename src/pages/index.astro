@@ -156,8 +156,8 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .hero { background: var(--turkuaz); overflow: hidden; isolation: isolate; }
   /* Yazıların arkasında soldan sağa açılan turkuaz perde: arkadan kayan görseller hafifçe seçilir */
   .hero-veil { position: absolute; inset: 0; z-index: 1; pointer-events: none;
-    background: linear-gradient(90deg, rgb(64 224 208 / 0.95) 0%, rgb(64 224 208 / 0.9) 32%, rgb(64 224 208 / 0.72) 48%, rgb(48 213 200 / 0.3) 66%, rgb(48 213 200 / 0) 82%); }
-  @media (max-width: 900px) { .hero-veil { background: linear-gradient(180deg, rgb(64 224 208 / 0.9), rgb(64 224 208 / 0.84) 70%, rgb(64 224 208 / 0.5)); } }
+    background: linear-gradient(90deg, rgb(64 224 208 / 0.86) 0%, rgb(64 224 208 / 0.78) 32%, rgb(64 224 208 / 0.58) 48%, rgb(48 213 200 / 0.22) 66%, rgb(48 213 200 / 0) 82%); }
+  @media (max-width: 900px) { .hero-veil { background: linear-gradient(180deg, rgb(64 224 208 / 0.82), rgb(64 224 208 / 0.74) 70%, rgb(64 224 208 / 0.4)); } }
   .hero :global(.hero-arcs) { left: -3%; bottom: 0; width: min(55vw, 560px); z-index: 1; }
   .hero-photo-wrap { position: relative; }
   .hero-badge-row { position: absolute; left: 0; right: 0; top: 0; display: flex; justify-content: flex-end; pointer-events: none; z-index: 2; }
@@ -220,7 +220,6 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     .work { background: var(--petrol); display: flex; flex-direction: column-reverse; }
     .work-veil { position: relative; width: 100%; background: linear-gradient(180deg, var(--petrol), rgb(6 42 45 / 0.6)); padding-top: 4rem; }
     .work :global(.ws-scroller) { padding-block: 4rem 4rem; }
-    .work :global(.play-toggle) { top: 0.5rem; }
     .work :global(.ws-row) { padding-left: var(--gutter); }
   }
 

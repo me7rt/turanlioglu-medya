@@ -294,21 +294,8 @@ export function explorer(root: HTMLElement | null) {
 }
 
 // ============ 9. Kayan galeriler: açılış sütunları + iş şeridi ============
-function bindToggle(root: HTMLElement, onChange: (paused: boolean) => void) {
-  const btn = root.querySelector<HTMLButtonElement>('[data-play-toggle]');
-  if (!btn) return;
-  const base = btn.getAttribute('aria-label')!; // "... durdur"
-  btn.addEventListener('click', () => {
-    const paused = btn.getAttribute('aria-pressed') !== 'true';
-    btn.setAttribute('aria-pressed', String(paused));
-    btn.setAttribute('aria-label', paused ? base.replace('durdur', 'başlat') : base);
-    onChange(paused);
-  });
-}
-
 export function heroGallery(root: HTMLElement | null) {
   if (!root) return;
-  bindToggle(root, (p) => root.classList.toggle('paused', p));
   new IntersectionObserver(([e]) => root.classList.toggle('offscreen', !e.isIntersecting)).observe(root);
 }
 
@@ -317,9 +304,8 @@ export function workStrip(root: HTMLElement | null) {
   const sc = root.querySelector<HTMLElement>('[data-ws-scroller]')!;
   const items = sc.querySelectorAll<HTMLElement>('.ws-item');
   const n = items.length / 2;
-  let paused = false, hover = false, inView = false, holdUntil = 0, last = 0, pos = 0;
+  let hover = false, inView = false, holdUntil = 0, last = 0, pos = 0;
   const half = () => items[n].offsetLeft - items[0].offsetLeft;
-  bindToggle(root, (p) => { paused = p; });
   sc.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') hover = true; });
   sc.addEventListener('pointerleave', () => { hover = false; });
   sc.addEventListener('focusin', () => { hover = true; });
@@ -329,7 +315,7 @@ export function workStrip(root: HTMLElement | null) {
   new IntersectionObserver(([e]) => { inView = e.isIntersecting; }, { threshold: 0.4 }).observe(root);
   function frame(now: number) {
     const dt = Math.min(now - (last || now), 50); last = now;
-    if (!paused && !hover && inView && now > holdUntil) {
+    if (!hover && inView && now > holdUntil) {
       if (Math.abs(sc.scrollLeft - pos) > 2) pos = sc.scrollLeft; // kullanıcı kaydırdıysa oradan devam
       pos += dt * 0.045;
       const h = half();
