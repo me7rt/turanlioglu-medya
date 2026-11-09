@@ -309,3 +309,53 @@ p { margin: 0 0 1em; max-width: 68ch; text-wrap: pretty; }
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
 }
+
+/* ================= YARATICI EFEKTLER (2. tur) ================= */
+/* Su yüzeyi */
+[data-hero] { position: relative; }
+.fx-water { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+
+/* Fareden kaçan harfler */
+.ch { display: inline-block; will-change: transform; }
+h1.loose .w { overflow: visible; }
+
+/* 3B hizmet çarkı */
+.service-list.wheel { position: relative; perspective: 1500px; border-top: 0; overflow: clip; overflow-clip-margin: 8px; }
+.service-list.wheel > li {
+  position: absolute; left: 0; right: 0; top: 50%; border-bottom: 0;
+  backface-visibility: hidden; will-change: transform, opacity, filter;
+}
+.service-list.wheel > li a { padding-inline: 1.25rem; border-radius: 6px; }
+.service-list.wheel > li.front a { background: var(--turkuaz-50); box-shadow: inset 0 0 0 3px var(--turkuaz); }
+.service-list.wheel::before, .service-list.wheel::after {
+  content: ''; position: absolute; left: 0; right: 0; height: 4px; background: var(--turkuaz); z-index: 2; pointer-events: none;
+}
+.service-list.wheel::before { top: 0; }
+.service-list.wheel::after { bottom: 0; }
+
+/* Süreç: yatay kayan kartlar */
+.hscroll-section { overflow: clip; }
+.steps.hscroll { display: flex !important; gap: clamp(1rem, 2vw, 2rem); width: auto; }
+.steps.hscroll > li {
+  flex: 0 0 min(78vw, 520px); min-height: min(56vh, 460px); padding: clamp(1.5rem, 3vw, 2.5rem) !important;
+  border-top: 0 !important; border-radius: 10px; display: flex; flex-direction: column; justify-content: flex-end;
+  background: var(--beyaz); box-shadow: 0 0 0 2px var(--petrol);
+}
+.steps.hscroll > li::before { display: none; }
+.steps.hscroll > li:nth-child(4n+1) { background: var(--turkuaz); }
+.steps.hscroll > li:nth-child(4n+2) { background: var(--petrol); color: #d7ecea; }
+.steps.hscroll > li:nth-child(4n+2) h3 { color: var(--beyaz); }
+.steps.hscroll > li:nth-child(4n+2) p { color: #b9d6d3; }
+.steps.hscroll > li:nth-child(4n+2) .step-no { color: var(--turkuaz); }
+.steps.hscroll > li:nth-child(4n+3) { background: var(--turkuaz-100); }
+.steps.hscroll > li:nth-child(4n+1) p, .steps.hscroll > li:nth-child(4n+3) p { color: var(--petrol); }
+.steps.hscroll .step-no { font-size: clamp(5rem, 3rem + 8vw, 11rem); margin-bottom: auto; }
+.steps.hscroll > li h3 { font-size: var(--fs-3); margin-top: 1rem; }
+.steps.hscroll > li p { font-size: var(--fs-1); max-width: 30ch; }
+
+/* İmleç izi */
+.fx-trail { position: fixed; inset: 0; z-index: 150; pointer-events: none; mix-blend-mode: multiply; }
+.fx-trail > div { position: absolute; left: 0; top: 0; border-radius: 50%; will-change: transform, opacity; opacity: 0; }
+
+/* Şifre çözme başlıkları: genişlik zıplamasın */
+[data-scramble] span { font-variant-numeric: tabular-nums; }

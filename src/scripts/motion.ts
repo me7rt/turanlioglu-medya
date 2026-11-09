@@ -4,6 +4,7 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
+import * as fx from './fx';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -34,13 +35,21 @@ function init() {
   });
 
   splitHeadings();
+  const hero = document.querySelector<HTMLElement>('[data-hero]');
+  if (fine) fx.repel(hero?.querySelector('h1') ?? null);
   heroIntro();
+  fx.water(hero);
+  fx.grow();
+  fx.wheel(document.querySelector('[data-wheel]'));
+  fx.horizontal(document.querySelector('[data-hscroll]'));
+  fx.scramble();
   reveals();
   marquee(vel);
   rgbSplit(vel);
   lines();
   parallax();
-  if (fine) { cursor(); servicePreview(); magnetic(); }
+  if (fine) { cursor(); servicePreview(); magnetic(); fx.trail(); }
+  ScrollTrigger.refresh();
   scrollHint();
 
   root.classList.add('anim-ready');
@@ -49,7 +58,7 @@ function init() {
 // ---------- 1. Başlıkları kelimelere böl (maske içinde yükselsin) ----------
 function splitHeadings() {
   document.querySelectorAll<HTMLElement>('[data-split], main h1, main h2').forEach((el) => {
-    if (el.dataset.splitDone || el.closest('[data-nosplit]') || el.children.length) return;
+    if (el.dataset.splitDone || el.closest('[data-nosplit]') || el.hasAttribute('data-scramble') || el.children.length) return;
     const text = el.textContent?.trim() ?? '';
     if (!text) return;
     el.dataset.splitDone = '1';
@@ -68,6 +77,7 @@ function heroIntro() {
     const words = h1.querySelectorAll('.wi');
     const tl = gsap.timeline({ delay: 0.1 });
     tl.fromTo(words, { yPercent: 115, rotate: 6 }, { yPercent: 0, rotate: 0, duration: 1.1, ease: 'expo.out', stagger: 0.07 });
+    tl.add(() => h1.classList.add('loose'));
     const after = (hero ?? document.querySelector('main'))?.querySelectorAll('[data-intro]');
     if (after?.length) {
       tl.fromTo(after, { opacity: 0, y: 24, filter: 'blur(8px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.9, ease: EASE, stagger: 0.1 }, '-=0.6');

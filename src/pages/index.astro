@@ -36,8 +36,8 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     </div>
   </section>
 
-  <div class="wrap hero-photo" data-curtain>
-    <Img name="hero" eager sizes="(min-width: 1320px) 1272px, 100vw" ratio="21/9" />
+  <div class="hero-photo" data-grow>
+    <Img name="hero" eager sizes="100vw" ratio="21/9" />
   </div>
 
   <div class="mq" aria-hidden="true">
@@ -60,7 +60,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
         <h2 id="hizmetler-baslik" data-rgb>Ne yapıyoruz?</h2>
         <p class="lead" data-reveal>Beş hizmet, tek strateji. İhtiyacınıza göre birini ya da hepsini birlikte alabilirsiniz.</p>
       </div>
-      <ul class="service-list" data-preview-list data-stagger>
+      <ul class="service-list" data-preview-list data-wheel>
         {services.map((s) => (
           <li>
             <a href={url(`/hizmetler/${s.slug}/`)} data-preview={imgSrc(s.image, 700)} data-cursor="İncele">
@@ -79,7 +79,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   <section class="section work on-dark" aria-labelledby="isler-baslik">
     <div class="wrap work-grid">
       <div>
-        <h2 id="isler-baslik">Seçili işler</h2>
+        <h2 id="isler-baslik" data-scramble>Seçili işler</h2>
         <p>Burada gerçek müşteri projeleri; problem, yaklaşım ve ölçülen sonuçlarıyla yer alacak. Uydurma vaka ya da rakam koymuyoruz.</p>
         <p class="todo">[DOLDURULACAK: izin alınmış 3–4 gerçek proje]</p>
       </div>
@@ -93,7 +93,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
         <h2 id="surec-baslik" data-rgb>Nasıl çalışıyoruz?</h2>
         <p class="lead" data-reveal>Her iş aynı dört adımdan geçer; ne zaman ne olacağını baştan bilirsiniz.</p>
       </div>
-      <ol class="steps" data-stagger>
+      <ol class="steps" data-hscroll>
         {process.map((p, i) => (
           <li data-line>
             <span class="step-no" aria-hidden="true" data-count>{i + 1}</span>
@@ -109,7 +109,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     <section class="section blog-teaser" aria-labelledby="blog-baslik">
       <div class="wrap">
         <div class="section-head">
-          <h2 id="blog-baslik">Rehberler</h2>
+          <h2 id="blog-baslik" data-scramble>Rehberler</h2>
           <p class="lead"><a href={url('/blog/')}>Tüm yazılar</a></p>
         </div>
         <ul class="post-list" data-stagger>
@@ -130,7 +130,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   <section class="section" aria-labelledby="sss-baslik">
     <div class="wrap faq-grid">
       <div>
-        <h2 id="sss-baslik">Sık sorulan sorular</h2>
+        <h2 id="sss-baslik" data-scramble>Sık sorulan sorular</h2>
         <p class="lead"><a href={url('/sss/')}>Tüm sorular</a></p>
       </div>
       <Faq items={faq} />
@@ -152,6 +152,8 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .hero .btn--ghost:hover { background: var(--petrol); }
 
   .hero-photo { margin-top: clamp(-5rem, -3rem - 4vw, -3rem); position: relative; }
+  .hero-photo :global(.img-frame) { border-radius: 0; }
+  .hero-grid { position: relative; z-index: 1; }
 
   .section-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 1rem 3rem; margin-bottom: 3rem; }
   .section-head h2 { margin: 0; }
