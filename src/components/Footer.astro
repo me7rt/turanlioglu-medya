@@ -8,10 +8,10 @@ const socials = Object.entries(site.social).filter(([, v]) => v);
 const word = 'Turanlıoğlu';
 ---
 <footer class="site-footer on-dark">
-  <div class="ft-glow" aria-hidden="true"></div>
+  <div class="ft-orbs" aria-hidden="true"><i></i><i></i><i></i><b class="ft-spot" data-ft-spot></b></div>
   <Arcs class="ft-arcs" tone="light" />
   <div class="wrap">
-    <div class="ft-cta">
+    <div class="ft-cta glass">
       <p class="ft-cta-title">Bir sonraki adımı<br />birlikte atalım.</p>
       <a class="ft-cta-btn" href={url('/iletisim/')} data-cursor="Tanışalım">
         <span>Teklif al</span>
@@ -19,7 +19,7 @@ const word = 'Turanlıoğlu';
       </a>
     </div>
 
-    <div class="ft-grid">
+    <div class="ft-grid glass">
       <div class="ft-brand">
         <a class="logo" href={url('/')}><Logo /><span>{site.name}</span></a>
         <p>{site.tagline}</p>
@@ -51,7 +51,7 @@ const word = 'Turanlıoğlu';
 
   <p class="ft-mark" aria-hidden="true" data-ft-mark>{[...word].map((c) => <span>{c}</span>)}</p>
 
-  <div class="wrap ft-bottom">
+  <div class="wrap ft-bottom-wrap"><div class="ft-bottom glass">
     <span>© {year} {site.name}</span>
     <nav aria-label="Yasal" class="ft-legal">
       <a class="ft-link" href={url('/yasal/gizlilik-politikasi/')}>Gizlilik politikası</a>
@@ -61,19 +61,46 @@ const word = 'Turanlıoğlu';
     <a class="ft-top" href="#icerik" aria-label="Sayfanın başına dön">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6" /></svg>
     </a>
-  </div>
+  </div></div>
 </footer>
 <style>
   .site-footer {
     position: relative; overflow: hidden; isolation: isolate; background: var(--petrol); color: #c9e2df;
     padding-top: clamp(4rem, 7vw, 7rem); border-radius: clamp(24px, 3vw, 44px) clamp(24px, 3vw, 44px) 0 0; margin-top: calc(-1 * clamp(24px, 3vw, 44px));
   }
-  .ft-glow { position: absolute; inset: 0; z-index: -1; pointer-events: none;
-    background: radial-gradient(50% 40% at 50% 100%, rgb(64 224 208 / 0.28), transparent 70%), radial-gradient(30% 40% at 95% 0%, rgb(27 111 103 / 0.6), transparent 70%); }
-  .site-footer :global(.ft-arcs) { right: -3%; top: -4%; width: min(40vw, 420px); transform: scale(-1, -1); z-index: -1; opacity: 0.6; }
+  /* Arkada süzülen ışık küreleri: cam paneller bunları buzlu gösterir */
+  .ft-orbs { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+  .ft-orbs i, .ft-spot { position: absolute; border-radius: 50%; filter: blur(70px); }
+  .ft-orbs i:nth-child(1) { width: 46vw; height: 46vw; left: -12vw; top: 4%; background: rgb(64 224 208 / 0.34); }
+  .ft-orbs i:nth-child(2) { width: 34vw; height: 34vw; right: -8vw; top: 30%; background: rgb(27 111 103 / 0.9); }
+  .ft-orbs i:nth-child(3) { width: 30vw; height: 30vw; left: 35%; bottom: -10vw; background: rgb(48 213 200 / 0.3); }
+  :global(.motion) .ft-orbs i:nth-child(1) { animation: orb1 18s ease-in-out infinite alternate; }
+  :global(.motion) .ft-orbs i:nth-child(2) { animation: orb2 22s ease-in-out infinite alternate; }
+  :global(.motion) .ft-orbs i:nth-child(3) { animation: orb3 16s ease-in-out infinite alternate; }
+  @keyframes orb1 { to { transform: translate(28vw, 12vh) scale(1.15); } }
+  @keyframes orb2 { to { transform: translate(-30vw, -10vh) scale(0.9); } }
+  @keyframes orb3 { to { transform: translate(-18vw, -26vh) scale(1.2); } }
+  .ft-spot { width: 380px; height: 380px; left: 0; top: 0; margin: -190px 0 0 -190px; background: rgb(64 224 208 / 0.35); opacity: 0; transition: opacity 0.5s; filter: blur(60px); }
+
+  /* Buzlu cam */
+  .glass {
+    position: relative; border-radius: clamp(20px, 2.4vw, 32px);
+    background: linear-gradient(135deg, rgb(255 255 255 / 0.09), rgb(255 255 255 / 0.02)), rgb(6 42 45 / 0.38);
+    backdrop-filter: blur(22px) saturate(160%); -webkit-backdrop-filter: blur(22px) saturate(160%);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.22), inset 0 0 0 1px rgb(255 255 255 / 0.1), 0 30px 60px -30px rgb(0 0 0 / 0.5);
+  }
+  /* Kenarda gezinen ışık çizgisi */
+  .glass::before {
+    content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none;
+    background: radial-gradient(180px 120px at var(--mx, 50%) var(--my, 0%), rgb(64 224 208 / 0.9), transparent 70%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
+    opacity: var(--edge, 0); transition: opacity 0.4s;
+  }
+  .glass:hover { --edge: 1; }
+  .site-footer :global(.ft-arcs) { right: -3%; top: -4%; width: min(40vw, 420px); transform: scale(-1, -1); z-index: -1; opacity: 0.5; }
 
   /* Çağrı alanı */
-  .ft-cta { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 2rem; padding-bottom: clamp(3rem, 5vw, 4.5rem); border-bottom: 1px solid rgb(255 255 255 / 0.12); }
+  .ft-cta { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 2rem; padding: clamp(2rem, 4vw, 3.5rem); }
   .ft-cta-title { margin: 0; max-width: none; font-family: var(--font-display); font-weight: 650; font-size: var(--fs-4); line-height: 0.98; letter-spacing: -0.035em; color: var(--beyaz); font-variation-settings: 'wdth' 88; }
   .ft-cta-btn {
     display: inline-flex; align-items: center; gap: 1rem; padding: 0.6rem 0.6rem 0.6rem 2rem; border-radius: 999px;
@@ -86,8 +113,8 @@ const word = 'Turanlıoğlu';
   .ft-cta-btn:hover .ft-cta-ic { transform: rotate(45deg); }
 
   /* Bağlantılar */
-  .ft-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 2.5rem; padding-block: clamp(3rem, 5vw, 4.5rem); }
-  .ft-grid h2 { font: 600 0.95rem var(--font-text); letter-spacing: 0; color: var(--turkuaz); margin-bottom: 1.1rem; }
+  .ft-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 2.5rem; padding: clamp(2rem, 4vw, 3.5rem); margin-top: 1.25rem; }
+  .ft-grid h2 { font: 600 0.95rem var(--font-text); letter-spacing: 0; color: #9ff0e6; margin-bottom: 1.1rem; }
   .ft-grid ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.65rem; }
   .ft-brand .logo { color: var(--beyaz); margin-bottom: 1rem; }
   .ft-city { display: flex; align-items: center; gap: 0.6rem; }
@@ -102,7 +129,7 @@ const word = 'Turanlıoğlu';
   .ft-mark {
     display: flex; justify-content: center; margin: 0; max-width: none; padding-inline: 1vw; user-select: none; overflow: hidden;
     font-family: var(--font-display); font-weight: 700; font-size: clamp(3.4rem, 17.2vw, 22rem); line-height: 0.8; letter-spacing: -0.05em;
-    font-variation-settings: 'wdth' 78; padding-bottom: 0.14em; margin-bottom: -0.06em;
+    font-variation-settings: 'wdth' 78; padding: 0.1em 1vw 0.14em; margin: 0.2em 0 -0.06em;
   }
   .ft-mark span {
     display: inline-block; pointer-events: auto;
@@ -111,16 +138,32 @@ const word = 'Turanlıoğlu';
   }
   .ft-mark span:hover { transform: translateY(-0.08em); }
 
-  .ft-bottom { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem 2rem; padding-block: 1.5rem 2rem; font-size: 0.9rem;
-    background: linear-gradient(rgb(255 255 255 / 0.12), rgb(255 255 255 / 0.12)) var(--gutter) 0 / calc(100% - 2 * var(--gutter)) 1px no-repeat; }
+  .ft-bottom-wrap { position: relative; z-index: 2; margin-top: calc(-0.4 * clamp(3.4rem, 17.2vw, 22rem)); padding-bottom: 1.5rem; }
+  .ft-bottom { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem 2rem; padding: 1rem 1rem 1rem 1.75rem; font-size: 0.9rem; border-radius: 999px; }
   .ft-legal { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; margin-left: auto; }
   .ft-top { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px rgb(64 224 208 / 0.6); color: var(--turkuaz); transition: background 0.3s, color 0.3s, transform 0.4s var(--ease); }
   .ft-top:hover { background: var(--turkuaz); color: var(--petrol); transform: translateY(-4px); }
 
   @media (max-width: 900px) { .ft-grid { grid-template-columns: 1fr 1fr; } .ft-brand { grid-column: 1 / -1; } }
-  @media (max-width: 520px) { .ft-legal { margin-left: 0; } }
+  @media (max-width: 520px) { .ft-legal { margin-left: 0; } .ft-bottom { border-radius: 24px; } .ft-bottom-wrap { margin-top: -0.9rem; } }
 </style>
 <script>
+  // İmleç footer'da gezinirken arkadaki ışık onu takip eder; cam panellerin kenarında ışık dolaşır
+  const ft = document.querySelector<HTMLElement>('.site-footer');
+  const spot = document.querySelector<HTMLElement>('[data-ft-spot]');
+  if (ft && spot && matchMedia('(pointer: fine)').matches) {
+    ft.addEventListener('pointermove', (e) => {
+      const r = ft.getBoundingClientRect();
+      spot.style.opacity = '1';
+      spot.style.transform = `translate(${e.clientX - r.left}px, ${e.clientY - r.top}px)`;
+      ft.querySelectorAll<HTMLElement>('.glass').forEach((g) => {
+        const b = g.getBoundingClientRect();
+        g.style.setProperty('--mx', `${e.clientX - b.left}px`);
+        g.style.setProperty('--my', `${e.clientY - b.top}px`);
+      });
+    });
+    ft.addEventListener('pointerleave', () => { spot.style.opacity = '0'; });
+  }
   // Dev yazı ekrana girerken harfler alttan sırayla yükselir (hareket açıkken)
   const mark = document.querySelector<HTMLElement>('[data-ft-mark]');
   if (mark && document.documentElement.classList.contains('motion') && 'IntersectionObserver' in window) {
