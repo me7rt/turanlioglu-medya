@@ -6,6 +6,8 @@ import { url } from '../lib/url';
 const year = new Date().getFullYear();
 const socials = Object.entries(site.social).filter(([, v]) => v);
 const word = 'Turanlıoğlu';
+// Harfler arası görünen boşluk eşit olsun diye harf başına ince ayar (em)
+const kern = [0, 0.028, -0.024, 0.048, -0.004, -0.02, -0.032, 0, 0.04, -0.024, -0.02];
 ---
 <footer class="site-footer on-dark">
   <div class="ft-orbs" aria-hidden="true"><i></i><i></i><i></i><b class="ft-spot" data-ft-spot></b></div>
@@ -49,7 +51,7 @@ const word = 'Turanlıoğlu';
     </div>
   </div>
 
-  <p class="ft-mark" aria-hidden="true" data-ft-mark>{[...word].map((c) => <span class:list={{ 'g-sade': 'ğua'.includes(c), 'g-gap': c === 'ğ' }}>{c}</span>)}</p>
+  <p class="ft-mark" aria-hidden="true" data-ft-mark>{[...word].map((c, i) => <span class:list={{ 'g-sade': 'ğua'.includes(c) }} style={kern[i] ? `margin-left:${kern[i]}em` : undefined}>{c}</span>)}</p>
 
   <div class="wrap ft-bottom-wrap"><div class="ft-bottom glass">
     <span>© {year} {site.name}</span>
@@ -128,17 +130,16 @@ const word = 'Turanlıoğlu';
   /* Dev yazı: harfler sırayla yükselir; üzerine gelinen harf zıplar */
   .ft-mark {
     display: flex; justify-content: center; margin: 0; max-width: none; padding-inline: 1vw; user-select: none; overflow: hidden;
-    font-family: var(--font-display); font-weight: 700; font-size: clamp(3.4rem, 17.2vw, 22rem); line-height: 0.8; letter-spacing: -0.05em;
-    font-variation-settings: 'wdth' 78; padding: 0.1em 1vw 0.22em; margin: 0.2em 0 0;
+    font-family: var(--font-display); font-weight: 700; font-size: clamp(3.2rem, 16.2vw, 21rem); line-height: 0.8; letter-spacing: -0.05em;
+    font-variation-settings: 'wdth' 78; padding: 0.1em 1vw 0.22em; margin: 0.2em 0 0; gap: 0.02em;
   }
   .ft-mark span {
-    display: inline-block; pointer-events: auto; padding: 0.06em 0 0.2em; margin-bottom: -0.2em;
+    display: inline-block; pointer-events: auto; padding: 0.06em 0 0.2em; margin-bottom: -0.2em; letter-spacing: 0;
     background: linear-gradient(180deg, var(--turkuaz) 15%, rgb(64 224 208 / 0.35) 100%); -webkit-background-clip: text; background-clip: text; color: transparent;
     transition: transform 0.5s var(--ease);
   }
   /* Bricolage'ın iki katlı 'g'si yerine sade, tek katlı 'g' (Instrument Sans) */
-  .ft-mark .g-sade { font-family: var(--font-text); font-weight: 700; font-variation-settings: normal; letter-spacing: 0; }
-  .ft-mark .g-gap { margin-left: 0.09em; }
+  .ft-mark .g-sade { font-family: var(--font-text); font-weight: 700; font-variation-settings: normal; }
   .ft-mark span:hover { transform: translateY(-0.08em); }
 
   .ft-bottom-wrap { position: relative; z-index: 2; margin-top: 0.5rem; padding-bottom: 1.5rem; }
