@@ -26,13 +26,13 @@ const schema = [{
 >
   <div class="wrap section" style="padding-top:2rem">
     <h1>Blog ve rehberler</h1>
-    <p class="lead">Sahada gördüklerimizi, uygulanabilir adımlara çevirerek yazıyoruz.</p>
+    <p class="lead" data-intro>Sahada gördüklerimizi, uygulanabilir adımlara çevirerek yazıyoruz.</p>
     <ul class="posts">
       {posts.map((p) => (
         <li>
-          <a href={url(`/blog/${p.id}/`)} class="post-card">
-            <Img name={p.data.image} sizes="(min-width: 900px) 40vw, 100vw" ratio="3/2" />
-            <div>
+          <a href={url(`/blog/${p.id}/`)} class="post-card" data-cursor="Oku">
+            <div data-curtain><Img name={p.data.image} sizes="(min-width: 900px) 40vw, 100vw" ratio="3/2" /></div>
+            <div data-reveal>
               <p class="cat">{p.data.category}</p>
               <h2>{p.data.title}</h2>
               <p>{p.data.description}</p>

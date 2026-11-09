@@ -65,6 +65,13 @@ const robots = isPreview || noindex ? 'noindex, nofollow' : 'index, follow, max-
 <html lang="tr">
   <head>
     <meta charset="utf-8" />
+    <script is:inline>
+      // Hareket açıksa başlangıç gizlemelerini etkinleştir; 3 sn içinde hazır olmazsa her şeyi göster.
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('anim');
+        setTimeout(function () { document.documentElement.classList.add('anim-ready'); }, 3000);
+      }
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
@@ -109,5 +116,6 @@ const robots = isPreview || noindex ? 'noindex, nofollow' : 'index, follow, max-
       <slot />
     </main>
     <Footer />
+    <script>import '../scripts/motion';</script>
   </body>
 </html>

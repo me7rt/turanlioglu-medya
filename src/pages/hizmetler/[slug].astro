@@ -37,10 +37,10 @@ const title = `${s.name} | ${site.city} | ${site.name}`;
     <div class="wrap svc-hero-grid">
       <div>
         <h1>{s.name}</h1>
-        <p class="lead-strong">{s.short}</p>
-        <a class="btn" href={url('/iletisim/')}>Bu hizmet için ön görüşme planla</a>
+        <p class="lead-strong" data-intro>{s.short}</p>
+        <a class="btn" data-intro href={url('/iletisim/')}>Bu hizmet için ön görüşme planla</a>
       </div>
-      <Img name={s.image} eager sizes="(min-width: 900px) 45vw, 100vw" ratio="4/3" />
+      <div data-intro><Img name={s.image} eager sizes="(min-width: 900px) 45vw, 100vw" ratio="4/3" /></div>
     </div>
   </section>
 
@@ -51,9 +51,9 @@ const title = `${s.name} | ${site.city} | ${site.name}`;
       <h2>Kimler için?</h2>
       <p>{s.forWhom}</p>
     </div>
-    <aside class="includes" aria-labelledby="kapsam">
+    <aside class="includes" aria-labelledby="kapsam" data-reveal>
       <h2 id="kapsam">Neler dahil?</h2>
-      <ul>{s.includes.map((x) => <li>{x}</li>)}</ul>
+      <ul data-stagger>{s.includes.map((x) => <li>{x}</li>)}</ul>
     </aside>
   </div>
 
@@ -64,7 +64,7 @@ const title = `${s.name} | ${site.city} | ${site.name}`;
 
   <nav class="wrap others" aria-label="Diğer hizmetler">
     <h2>Diğer hizmetler</h2>
-    <ul>{others.map((o) => <li><a href={url(`/hizmetler/${o.slug}/`)}>{o.name}</a></li>)}</ul>
+    <ul data-stagger>{others.map((o) => <li><a href={url(`/hizmetler/${o.slug}/`)}>{o.name}</a></li>)}</ul>
   </nav>
 
   <CtaBand />

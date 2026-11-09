@@ -6,8 +6,10 @@ import Faq from '../components/Faq.astro';
 import CtaBand from '../components/CtaBand.astro';
 import { site, services, faq, process } from '../data/site';
 import { url } from '../lib/url';
+import { imgSrc } from '../data/images';
 import { getCollection } from 'astro:content';
 
+const marqueeWords = ['Sosyal medya', 'Web tasarım', 'Dijital reklam', 'İçerik', 'Video', 'SEO', 'GEO'];
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 3);
@@ -16,34 +18,52 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   title="Turanlıoğlu Medya | Sosyal medya, web ve dijital reklam ajansı"
   description="Turanlıoğlu Medya; sosyal medya yönetimi, web tasarım, dijital reklam, içerik üretimi ve SEO/GEO hizmetleri sunan İstanbul merkezli dijital ajanstır."
 >
-  <section class="hero" aria-labelledby="hero-baslik">
+  <section class="hero" data-hero aria-labelledby="hero-baslik">
     <div class="wrap hero-grid">
       <div class="hero-text">
         <h1 id="hero-baslik">Markanızın sesi dijitalde daha uzağa ulaşsın.</h1>
-        <p class="hero-lead">{site.tagline} Sosyal medyadan web sitenize, reklamdan aramalara kadar tek bir plan, tek bir ekip.</p>
-        <div class="hero-actions">
+        <p class="hero-lead" data-intro>{site.tagline} Sosyal medyadan web sitenize, reklamdan aramalara kadar tek bir plan, tek bir ekip.</p>
+        <div class="hero-actions" data-intro>
           <a class="btn" href={url('/iletisim/')}>Ücretsiz ön görüşme planla</a>
           <a class="btn btn--ghost" href={url('/hizmetler/')}>Hizmetleri incele</a>
         </div>
+        <a class="scroll-hint" href="#ne-yapiyoruz" data-intro data-scroll-hint>
+          Aşağı kaydır
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
       </div>
       <HeroSignal />
     </div>
   </section>
 
-  <div class="wrap hero-photo">
+  <div class="wrap hero-photo" data-curtain>
     <Img name="hero" eager sizes="(min-width: 1320px) 1272px, 100vw" ratio="21/9" />
   </div>
 
-  <section class="section" aria-labelledby="hizmetler-baslik">
+  <div class="mq" aria-hidden="true">
+    {[['outline', 'left'], ['fill', 'right']].map(([style, dir]) => (
+      <div class:list={['mq-row', style]} data-marquee={dir}>
+        <div class="mq-track">
+          {[0, 1].map(() => (
+            <>{marqueeWords.map((w) => (
+              <span class="mq-item">{w}<svg class="mq-star" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4z"/></svg></span>
+            ))}</>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <section class="section" id="ne-yapiyoruz" aria-labelledby="hizmetler-baslik">
     <div class="wrap">
       <div class="section-head">
-        <h2 id="hizmetler-baslik">Ne yapıyoruz?</h2>
-        <p class="lead">Beş hizmet, tek strateji. İhtiyacınıza göre birini ya da hepsini birlikte alabilirsiniz.</p>
+        <h2 id="hizmetler-baslik" data-rgb>Ne yapıyoruz?</h2>
+        <p class="lead" data-reveal>Beş hizmet, tek strateji. İhtiyacınıza göre birini ya da hepsini birlikte alabilirsiniz.</p>
       </div>
-      <ul class="service-list">
+      <ul class="service-list" data-preview-list data-stagger>
         {services.map((s) => (
           <li>
-            <a href={url(`/hizmetler/${s.slug}/`)}>
+            <a href={url(`/hizmetler/${s.slug}/`)} data-preview={imgSrc(s.image, 700)} data-cursor="İncele">
               <h3>{s.name}</h3>
               <p>{s.short}</p>
               <span class="more" aria-hidden="true">
@@ -63,20 +83,20 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
         <p>Burada gerçek müşteri projeleri; problem, yaklaşım ve ölçülen sonuçlarıyla yer alacak. Uydurma vaka ya da rakam koymuyoruz.</p>
         <p class="todo">[DOLDURULACAK: izin alınmış 3–4 gerçek proje]</p>
       </div>
-      <Img name="team" sizes="(min-width: 900px) 50vw, 100vw" ratio="4/3" />
+      <div data-curtain><Img name="team" sizes="(min-width: 900px) 50vw, 100vw" ratio="4/3" /></div>
     </div>
   </section>
 
   <section class="section process" aria-labelledby="surec-baslik">
     <div class="wrap">
       <div class="section-head">
-        <h2 id="surec-baslik">Nasıl çalışıyoruz?</h2>
-        <p class="lead">Her iş aynı dört adımdan geçer; ne zaman ne olacağını baştan bilirsiniz.</p>
+        <h2 id="surec-baslik" data-rgb>Nasıl çalışıyoruz?</h2>
+        <p class="lead" data-reveal>Her iş aynı dört adımdan geçer; ne zaman ne olacağını baştan bilirsiniz.</p>
       </div>
-      <ol class="steps">
+      <ol class="steps" data-stagger>
         {process.map((p, i) => (
-          <li>
-            <span class="step-no" aria-hidden="true">{i + 1}</span>
+          <li data-line>
+            <span class="step-no" aria-hidden="true" data-count>{i + 1}</span>
             <h3>{p.title}</h3>
             <p>{p.text}</p>
           </li>
@@ -92,10 +112,10 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
           <h2 id="blog-baslik">Rehberler</h2>
           <p class="lead"><a href={url('/blog/')}>Tüm yazılar</a></p>
         </div>
-        <ul class="post-list">
+        <ul class="post-list" data-stagger>
           {posts.map((p) => (
             <li>
-              <a href={url(`/blog/${p.id}/`)}>
+              <a href={url(`/blog/${p.id}/`)} data-cursor="Oku">
                 <Img name={p.data.image} sizes="(min-width: 900px) 33vw, 100vw" ratio="3/2" />
                 <h3>{p.data.title}</h3>
                 <p class="muted">{p.data.description}</p>

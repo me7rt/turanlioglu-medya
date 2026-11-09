@@ -47,11 +47,11 @@ const schema = [{
     <header class="article-head">
       <p class="cat">{d.category}</p>
       <h1>{d.title}</h1>
-      <p class="lead">{d.description}</p>
+      <p class="lead" data-intro>{d.description}</p>
       <PostMeta date={d.date} updated={d.updated} author={d.author} />
     </header>
 
-    <Img name={d.image} eager sizes="(min-width: 1320px) 1272px, 100vw" ratio="2/1" class="article-img" />
+    <div data-intro class="article-img"><Img name={d.image} eager sizes="(min-width: 1320px) 1272px, 100vw" ratio="2/1" /></div>
 
     <div class="article-body">
       <aside class="toc" aria-label="İçindekiler">
@@ -64,7 +64,7 @@ const schema = [{
       </aside>
       <div>
         {d.summary && (
-          <section class="summary" aria-labelledby="kisaca">
+          <section class="summary" aria-labelledby="kisaca" data-reveal data-nosplit>
             <h2 id="kisaca">Kısaca</h2>
             <ul>{d.summary.map((s) => <li>{s}</li>)}</ul>
           </section>
@@ -78,7 +78,7 @@ const schema = [{
           </section>
         )}
 
-        <aside class="author-box" aria-label="Yazar hakkında">
+        <aside class="author-box" aria-label="Yazar hakkında" data-reveal>
           <p><strong>{d.author}</strong>, {site.name}'nın kurucusudur. <a href={url('/hakkimizda/')}>Hakkımızda sayfasında</a> deneyimini okuyabilirsiniz.</p>
         </aside>
       </div>

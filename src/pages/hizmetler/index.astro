@@ -20,14 +20,14 @@ const schema = [{
 >
   <div class="wrap" style="padding-block:2rem 1rem">
     <h1>Hizmetler</h1>
-    <p class="lead">Turanlıoğlu Medya beş ana hizmet sunar. Her biri tek başına alınabilir; birlikte alındığında tek bir strateji altında yürür.</p>
+    <p class="lead" data-intro>Turanlıoğlu Medya beş ana hizmet sunar. Her biri tek başına alınabilir; birlikte alındığında tek bir strateji altında yürür.</p>
   </div>
   <div class="wrap svc">
     {services.map((s, i) => (
       <article class:list={['svc-row', { flip: i % 2 === 1 }]}>
-        <Img name={s.image} sizes="(min-width: 900px) 45vw, 100vw" ratio="4/3" />
-        <div>
-          <h2><a href={url(`/hizmetler/${s.slug}/`)}>{s.name}</a></h2>
+        <div data-curtain><Img name={s.image} sizes="(min-width: 900px) 45vw, 100vw" ratio="4/3" /></div>
+        <div data-reveal>
+          <h2><a href={url(`/hizmetler/${s.slug}/`)} data-cursor="İncele">{s.name}</a></h2>
           <p>{s.short}</p>
           <p class="muted">{s.forWhom}</p>
           <a class="btn btn--ghost" href={url(`/hizmetler/${s.slug}/`)}>{s.name} detayları</a>
