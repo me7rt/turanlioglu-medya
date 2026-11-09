@@ -1,0 +1,11 @@
+---
+interface Props { date: Date; updated?: Date; author: string }
+const { date, updated, author } = Astro.props;
+const fmt = (d: Date) => d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+<p class="post-meta muted">
+  <span>Yazar: {author}</span>
+  <span>Yayın: <time datetime={date.toISOString().slice(0, 10)}>{fmt(date)}</time></span>
+  {updated && <span>Son güncelleme: <time datetime={updated.toISOString().slice(0, 10)}>{fmt(updated)}</time></span>}
+</p>
+<style>.post-meta { display: flex; flex-wrap: wrap; gap: 0.4rem 1.5rem; font-size: 0.95rem; }</style>

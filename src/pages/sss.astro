@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { faq, services } from '../data/site';
+// Genel sorular + her hizmetin soruları tek FAQPage'de
+const all = [...faq, ...services.flatMap((s) => s.faq)];
+---
+<Base
+  title="Sık sorulan sorular"
+  description="Turanlıoğlu Medya ile çalışma süreci, hizmetler, fiyatlandırma ve sonuçlar hakkında en çok sorulan soruların kısa ve net cevapları."
+  crumbs={[{ name: 'Sık sorulan sorular', path: '/sss/' }]}
+>
+  <div class="wrap" style="padding-block:2rem 6rem;max-width:960px">
+    <h1>Sık sorulan sorular</h1>
+    <p class="lead">Aradığınız cevap burada yoksa bize doğrudan sorabilirsiniz.</p>
+    <Faq items={all} />
+  </div>
+  <CtaBand />
+</Base>

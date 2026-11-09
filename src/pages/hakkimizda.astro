@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro';
+import Img from '../components/Img.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { site } from '../data/site';
+import { absUrl } from '../lib/url';
+
+const schema = [{
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  url: absUrl('/hakkimizda/'),
+  about: { '@id': absUrl('/#kurum') },
+  mainEntity: {
+    '@type': 'Person',
+    '@id': absUrl('/hakkimizda/#mert'),
+    name: site.founder,
+    jobTitle: 'Kurucu',
+    worksFor: { '@id': absUrl('/#kurum') },
+    address: { '@type': 'PostalAddress', addressLocality: site.city, addressCountry: site.country },
+  },
+}];
+---
+<Base
+  title="Hakkımızda: Mert Turanlıoğlu ve Turanlıoğlu Medya"
+  description="Turanlıoğlu Medya, Mert Turanlıoğlu tarafından kurulan İstanbul merkezli dijital ajanstır. Hikâyemiz, çalışma şeklimiz ve değerlerimiz."
+  crumbs={[{ name: 'Hakkımızda', path: '/hakkimizda/' }]}
+  schema={schema}
+>
+  <div class="wrap about">
+    <div>
+      <h1>Hakkımızda</h1>
+      <p class="lead">{site.description}</p>
+      <h2 id="mert">Mert Turanlıoğlu</h2>
+      <p>Turanlıoğlu Medya'nın kurucusu.</p>
+      <p class="todo">[DOLDURULACAK: Mert'in hikâyesi — kaç yıldır bu işi yaptığı, hangi sektörlerle çalıştığı, neden bu ajansı kurduğu. E-E-A-T (deneyim, uzmanlık, otorite, güven) için en önemli bölüm.]</p>
+      <h2>Nasıl bir ajansız?</h2>
+      <p class="todo">[DOLDURULACAK: marka tonu için 3 sıfat ve her birinin işte nasıl göründüğü]</p>
+    </div>
+    <Img name="team" sizes="(min-width: 900px) 40vw, 100vw" ratio="4/5" />
+  </div>
+  <CtaBand />
+</Base>
+<style>
+  .about { display: grid; grid-template-columns: 1.3fr 1fr; gap: clamp(2rem, 6vw, 6rem); padding-block: 2rem 6rem; align-items: start; }
+  .about h2 { font-size: var(--fs-2); margin-top: 2.5rem; }
+  @media (max-width: 820px) { .about { grid-template-columns: 1fr; } }
+</style>

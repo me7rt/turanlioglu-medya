@@ -1,0 +1,23 @@
+---
+// Soru–cevap blokları + FAQPage schema. Henüz doldurulmamış cevaplar
+// schema'ya girmez (schema, sayfada görünenle birebir aynı ve gerçek olmalı).
+interface Props { items: { q: string; a: string }[]; schema?: boolean }
+const { items, schema = true } = Astro.props;
+const ready = items.filter((i) => !i.a.includes('[DOLDURULACAK'));
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: ready.map((i) => ({ '@type': 'Question', name: i.q, acceptedAnswer: { '@type': 'Answer', text: i.a } })),
+};
+---
+<div class="faq">
+  {items.map((i) => (
+    <details>
+      <summary>{i.q}</summary>
+      <div class="answer">
+        <p class:list={{ todo: i.a.includes('[DOLDURULACAK') }}>{i.a}</p>
+      </div>
+    </details>
+  ))}
+</div>
+{schema && ready.length > 0 && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}

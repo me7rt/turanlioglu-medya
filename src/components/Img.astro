@@ -1,0 +1,19 @@
+---
+import { images, imgSrc, imgSrcset } from '../data/images';
+interface Props { name: string; sizes?: string; eager?: boolean; class?: string; ratio?: string }
+const { name, sizes = '(min-width: 900px) 50vw, 100vw', eager = false, class: cls, ratio } = Astro.props;
+const im = images[name];
+---
+<div class:list={['img-frame', cls]} style={ratio ? `aspect-ratio:${ratio}` : `aspect-ratio:${im.w}/${im.h}`}>
+  <img
+    src={imgSrc(name)}
+    srcset={imgSrcset(name)}
+    sizes={sizes}
+    alt={im.alt}
+    width={im.w}
+    height={im.h}
+    loading={eager ? 'eager' : 'lazy'}
+    fetchpriority={eager ? 'high' : 'auto'}
+    decoding="async"
+  />
+</div>

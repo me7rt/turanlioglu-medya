@@ -1,0 +1,47 @@
+---
+import Base from '../../layouts/Base.astro';
+import Img from '../../components/Img.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { services } from '../../data/site';
+import { url, absUrl } from '../../lib/url';
+
+const schema = [{
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Turanlıoğlu Medya hizmetleri',
+  itemListElement: services.map((s, i) => ({ '@type': 'ListItem', position: i + 1, name: s.name, url: absUrl(`/hizmetler/${s.slug}/`) })),
+}];
+---
+<Base
+  title="Hizmetler: sosyal medya, web, reklam, içerik, SEO/GEO"
+  description="Sosyal medya yönetimi, web tasarım, Meta ve Google reklamları, içerik ve video üretimi, SEO ve GEO. Turanlıoğlu Medya'nın tüm hizmetleri tek sayfada."
+  crumbs={[{ name: 'Hizmetler', path: '/hizmetler/' }]}
+  schema={schema}
+>
+  <div class="wrap" style="padding-block:2rem 1rem">
+    <h1>Hizmetler</h1>
+    <p class="lead">Turanlıoğlu Medya beş ana hizmet sunar. Her biri tek başına alınabilir; birlikte alındığında tek bir strateji altında yürür.</p>
+  </div>
+  <div class="wrap svc">
+    {services.map((s, i) => (
+      <article class:list={['svc-row', { flip: i % 2 === 1 }]}>
+        <Img name={s.image} sizes="(min-width: 900px) 45vw, 100vw" ratio="4/3" />
+        <div>
+          <h2><a href={url(`/hizmetler/${s.slug}/`)}>{s.name}</a></h2>
+          <p>{s.short}</p>
+          <p class="muted">{s.forWhom}</p>
+          <a class="btn btn--ghost" href={url(`/hizmetler/${s.slug}/`)}>{s.name} detayları</a>
+        </div>
+      </article>
+    ))}
+  </div>
+  <CtaBand />
+</Base>
+<style>
+  .svc { display: grid; gap: clamp(3rem, 6vw, 6rem); padding-block: 3rem 6rem; }
+  .svc-row { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 5rem); align-items: center; }
+  .svc-row.flip > :first-child { order: 2; }
+  .svc-row h2 a { text-decoration: none; }
+  .svc-row h2 a:hover { text-decoration: underline; text-decoration-color: var(--turkuaz-2); }
+  @media (max-width: 820px) { .svc-row { grid-template-columns: 1fr; } .svc-row.flip > :first-child { order: 0; } }
+</style>

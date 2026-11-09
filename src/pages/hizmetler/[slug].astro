@@ -1,0 +1,89 @@
+---
+import Base from '../../layouts/Base.astro';
+import Img from '../../components/Img.astro';
+import Faq from '../../components/Faq.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { services, site } from '../../data/site';
+import { url, absUrl } from '../../lib/url';
+import { imgSrc } from '../../data/images';
+
+export function getStaticPaths() {
+  return services.map((s) => ({ params: { slug: s.slug }, props: { s } }));
+}
+const { s } = Astro.props;
+const path = `/hizmetler/${s.slug}/`;
+const others = services.filter((o) => o.slug !== s.slug);
+
+const schema = [{
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: s.name,
+  serviceType: s.name,
+  description: s.short,
+  url: absUrl(path),
+  image: imgSrc(s.image, 1200),
+  provider: { '@id': absUrl('/#kurum') },
+  areaServed: { '@type': 'Country', name: site.areaServed },
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: `${s.name} kapsamı`,
+    itemListElement: s.includes.map((x) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: x } })),
+  },
+}];
+const title = `${s.name} | ${site.city} | ${site.name}`;
+---
+<Base title={title} description={s.short.length > 160 ? s.short.slice(0, 157) + '…' : s.short} crumbs={[{ name: 'Hizmetler', path: '/hizmetler/' }, { name: s.name, path }]} schema={schema}>
+  <section class="svc-hero">
+    <div class="wrap svc-hero-grid">
+      <div>
+        <h1>{s.name}</h1>
+        <p class="lead-strong">{s.short}</p>
+        <a class="btn" href={url('/iletisim/')}>Bu hizmet için ön görüşme planla</a>
+      </div>
+      <Img name={s.image} eager sizes="(min-width: 900px) 45vw, 100vw" ratio="4/3" />
+    </div>
+  </section>
+
+  <div class="wrap section svc-body">
+    <div class="prose">
+      <h2>{s.name} nedir?</h2>
+      <p>{s.intro}</p>
+      <h2>Kimler için?</h2>
+      <p>{s.forWhom}</p>
+    </div>
+    <aside class="includes" aria-labelledby="kapsam">
+      <h2 id="kapsam">Neler dahil?</h2>
+      <ul>{s.includes.map((x) => <li>{x}</li>)}</ul>
+    </aside>
+  </div>
+
+  <section class="wrap section" style="padding-top:0" aria-labelledby="svc-sss">
+    <h2 id="svc-sss">{s.name} hakkında sorular</h2>
+    <Faq items={s.faq} />
+  </section>
+
+  <nav class="wrap others" aria-label="Diğer hizmetler">
+    <h2>Diğer hizmetler</h2>
+    <ul>{others.map((o) => <li><a href={url(`/hizmetler/${o.slug}/`)}>{o.name}</a></li>)}</ul>
+  </nav>
+
+  <CtaBand />
+</Base>
+<style>
+  .svc-hero { background: var(--turkuaz); padding-block: 3rem 4rem; margin-top: 1rem; }
+  .svc-hero-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(2rem, 5vw, 5rem); align-items: center; }
+  .lead-strong { font-size: var(--fs-1); max-width: 44ch; margin-bottom: 2rem; }
+  .svc-body { display: grid; grid-template-columns: 1.5fr 1fr; gap: clamp(2rem, 6vw, 6rem); }
+  .svc-body .prose h2:first-child { margin-top: 0; }
+  .includes { background: var(--beyaz); padding: 2rem; border-radius: var(--radius); border-top: 6px solid var(--turkuaz); align-self: start; }
+  .includes h2 { font-size: var(--fs-2); }
+  .includes ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.75rem; }
+  .includes li { padding-left: 1.75rem; position: relative; }
+  .includes li::before { content: ''; position: absolute; left: 0; top: 0.45em; width: 0.8em; height: 0.8em; border-radius: 50%; background: var(--turkuaz-2); }
+  .others { padding-bottom: 5rem; }
+  .others h2 { font-size: var(--fs-2); }
+  .others ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .others a { display: inline-block; padding: 0.7rem 1.2rem; border: 1px solid var(--petrol); border-radius: 999px; text-decoration: none; }
+  .others a:hover { background: var(--petrol); color: var(--beyaz); }
+  @media (max-width: 820px) { .svc-hero-grid, .svc-body { grid-template-columns: 1fr; } }
+</style>

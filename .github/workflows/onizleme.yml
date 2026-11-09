@@ -1,0 +1,55 @@
+name: Önizleme (GitHub Pages)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      SITE_URL: https://me7rt.github.io
+      BASE_PATH: /turanlioglu-medya
+      PUBLIC_PREVIEW: 'true'   # önizleme arama motorlarına kapalı (noindex)
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Stok görsel linklerini kontrol et
+        continue-on-error: true
+        run: |
+          fail=0
+          for id in $(grep -oE "photo-[0-9a-f-]+" src/data/images.ts | sort -u); do
+            code=$(curl -s -o /dev/null -w "%{http_code}" "https://images.unsplash.com/$id?w=200")
+            echo "$code $id"; [ "$code" = "200" ] || fail=1
+          done
+          exit $fail
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

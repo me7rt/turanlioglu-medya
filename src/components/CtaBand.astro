@@ -1,0 +1,17 @@
+---
+import { url } from '../lib/url';
+interface Props { title?: string; text?: string }
+const {
+  title = 'Bir kahve içip konuşalım.',
+  text = 'İşletmenizi ve hedefinizi dinleyelim, size özel bir yol haritası çıkaralım. Ön görüşme ücretsizdir.',
+} = Astro.props;
+---
+<section class="cta-band section" aria-labelledby="cta-baslik">
+  <div class="wrap">
+    <h2 id="cta-baslik">{title}</h2>
+    <div>
+      <p>{text}</p>
+      <a class="btn" href={url('/iletisim/')}>Ücretsiz ön görüşme planla</a>
+    </div>
+  </div>
+</section>

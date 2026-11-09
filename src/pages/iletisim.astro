@@ -1,0 +1,84 @@
+---
+import Base from '../layouts/Base.astro';
+import { site, services } from '../data/site';
+import { url, absUrl } from '../lib/url';
+const schema = [{ '@context': 'https://schema.org', '@type': 'ContactPage', url: absUrl('/iletisim/'), about: { '@id': absUrl('/#kurum') } }];
+---
+<Base
+  title="İletişim ve ücretsiz ön görüşme"
+  description="Turanlıoğlu Medya ile ücretsiz ön görüşme planlayın. İşletmenizi ve hedefinizi dinleyip size özel bir yol haritası ve teklif hazırlayalım."
+  crumbs={[{ name: 'İletişim', path: '/iletisim/' }]}
+  schema={schema}
+>
+  <div class="wrap contact">
+    <div>
+      <h1>Ücretsiz ön görüşme planlayın</h1>
+      <p class="lead">Formu doldurun, size dönelim. <span class="todo">[DOLDURULACAK: dönüş süresi, ör. bir iş günü]</span></p>
+      <dl class="contact-list">
+        <dt>E-posta</dt><dd class="todo">{site.email}</dd>
+        <dt>Telefon</dt><dd class="todo">{site.phone}</dd>
+        <dt>Konum</dt><dd>{site.city}, Türkiye</dd>
+      </dl>
+    </div>
+
+    <form class="form" method="post" action="#" novalidate data-demo>
+      <p class="form-note">Bu form önizleme modunda; gönderim Cloudflare'e geçerken bağlanacak.</p>
+      <label>Adınız soyadınız<input name="ad" autocomplete="name" required /></label>
+      <label>E-posta<input name="eposta" type="email" autocomplete="email" required /></label>
+      <label>Telefon <span class="muted">(isteğe bağlı)</span><input name="telefon" type="tel" autocomplete="tel" /></label>
+      <fieldset>
+        <legend>Hangi hizmetle ilgileniyorsunuz?</legend>
+        <div class="chips">
+          {services.map((s) => (
+            <label class="chip"><input type="checkbox" name="hizmet" value={s.slug} /><span>{s.name}</span></label>
+          ))}
+        </div>
+      </fieldset>
+      <label>Kısaca anlatın<textarea name="mesaj" rows="5"></textarea></label>
+      <label class="consent">
+        <input type="checkbox" name="kvkk" required />
+        <span><a href={url('/yasal/kvkk-aydinlatma-metni/')}>KVKK aydınlatma metnini</a> okudum, bilgilerimin bu talep için işlenmesini kabul ediyorum.</span>
+      </label>
+      <button class="btn" type="submit">Ön görüşme talebini gönder</button>
+      <p class="form-status" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</Base>
+<script>
+  const form = document.querySelector<HTMLFormElement>('form[data-demo]');
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const status = form.querySelector('.form-status')!;
+    if (!form.checkValidity()) {
+      status.textContent = 'Ad, geçerli bir e-posta ve KVKK onayı gerekli. Eksik alanları doldurup tekrar deneyin.';
+      (form.querySelector(':invalid') as HTMLElement | null)?.focus();
+      return;
+    }
+    status.textContent = 'Önizleme: form henüz bir adrese bağlı değil, talep gönderilmedi.';
+  });
+</script>
+<style>
+  .contact { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(2rem, 6vw, 6rem); padding-block: 2rem 6rem; }
+  .contact-list { display: grid; grid-template-columns: auto 1fr; gap: 0.75rem 1.5rem; margin-top: 2rem; }
+  .contact-list dt { font-weight: 600; }
+  .contact-list dd { margin: 0; }
+  .form { display: grid; gap: 1.25rem; background: var(--beyaz); padding: clamp(1.5rem, 3vw, 2.5rem); border-radius: var(--radius); border-top: 6px solid var(--turkuaz); }
+  .form label { display: grid; gap: 0.4rem; font-weight: 600; }
+  .form input:not([type=checkbox]), .form textarea {
+    font: inherit; font-weight: 400; padding: 0.8rem 0.9rem; border: 1.5px solid #8aa3a1; border-radius: var(--radius); background: var(--kagit); color: var(--petrol); min-height: 48px;
+  }
+  .form input:focus-visible, .form textarea:focus-visible { outline: 3px solid var(--turkuaz-2); outline-offset: 1px; border-color: var(--petrol); }
+  fieldset { border: 0; padding: 0; margin: 0; }
+  legend { font-weight: 600; margin-bottom: 0.6rem; }
+  .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .chip { display: inline-flex !important; grid-template-columns: none; font-weight: 500 !important; }
+  .chip input { position: absolute; opacity: 0; }
+  .chip span { padding: 0.55rem 1rem; border: 1.5px solid var(--petrol); border-radius: 999px; cursor: pointer; min-height: 44px; display: inline-flex; align-items: center; }
+  .chip input:checked + span { background: var(--turkuaz); border-color: var(--turkuaz); }
+  .chip input:focus-visible + span { outline: 3px solid var(--petrol); outline-offset: 2px; }
+  .consent { display: flex !important; gap: 0.75rem; align-items: flex-start; font-weight: 400 !important; }
+  .consent input { width: 22px; height: 22px; margin-top: 0.15rem; flex: none; accent-color: var(--petrol); }
+  .form-note { margin: 0; font-size: 0.9rem; background: #fff3b0; padding: 0.5rem 0.75rem; border-radius: 3px; }
+  .form-status { margin: 0; font-weight: 600; }
+  @media (max-width: 820px) { .contact { grid-template-columns: 1fr; } }
+</style>

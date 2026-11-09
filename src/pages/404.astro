@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import { services } from '../data/site';
+import { url } from '../lib/url';
+---
+<Base title="Sayfa bulunamadı" description="Aradığınız sayfa taşınmış ya da hiç var olmamış olabilir. Ana sayfaya, hizmetlere veya bloga buradan ulaşabilirsiniz." noindex>
+  <section style="background:var(--turkuaz)">
+    <div class="wrap" style="padding-block:5rem 6rem">
+      <h1 style="font-size:var(--fs-5);line-height:.9">Sinyal burada kesildi.</h1>
+      <p class="lead" style="color:var(--petrol)">Aradığınız sayfa taşınmış ya da hiç var olmamış olabilir. Şuradan devam edebilirsiniz:</p>
+      <ul style="display:flex;flex-wrap:wrap;gap:.75rem;list-style:none;padding:0;margin:2rem 0 0">
+        <li><a class="btn" href={url('/')}>Ana sayfa</a></li>
+        {services.map((s) => <li><a class="btn btn--ghost" href={url(`/hizmetler/${s.slug}/`)}>{s.name}</a></li>)}
+        <li><a class="btn btn--ghost" href={url('/blog/')}>Blog</a></li>
+      </ul>
+    </div>
+  </section>
+</Base>

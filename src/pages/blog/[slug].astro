@@ -1,0 +1,108 @@
+---
+import Base from '../../layouts/Base.astro';
+import Img from '../../components/Img.astro';
+import Faq from '../../components/Faq.astro';
+import PostMeta from '../../components/PostMeta.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { getCollection, render } from 'astro:content';
+import { absUrl, url } from '../../lib/url';
+import { imgSrc } from '../../data/images';
+import { site } from '../../data/site';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+const d = post.data;
+const path = `/blog/${post.id}/`;
+const toc = headings.filter((h) => h.depth === 2);
+
+const schema = [{
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: d.title,
+  description: d.description,
+  image: imgSrc(d.image, 1600),
+  datePublished: d.date.toISOString(),
+  dateModified: (d.updated ?? d.date).toISOString(),
+  inLanguage: 'tr-TR',
+  mainEntityOfPage: absUrl(path),
+  articleSection: d.category,
+  author: { '@type': 'Person', name: d.author, '@id': absUrl('/hakkimizda/#mert'), url: absUrl('/hakkimizda/') },
+  publisher: { '@id': absUrl('/#kurum') },
+}];
+---
+<Base
+  title={d.title}
+  description={d.description}
+  ogType="article"
+  image={imgSrc(d.image, 1200)}
+  crumbs={[{ name: 'Blog', path: '/blog/' }, { name: d.title, path }]}
+  schema={schema}
+>
+  <article class="wrap article">
+    <header class="article-head">
+      <p class="muted cat">{d.category}</p>
+      <h1>{d.title}</h1>
+      <p class="lead">{d.description}</p>
+      <PostMeta date={d.date} updated={d.updated} author={d.author} />
+    </header>
+
+    <Img name={d.image} eager sizes="(min-width: 1320px) 1272px, 100vw" ratio="2/1" class="article-img" />
+
+    <div class="article-body">
+      <aside class="toc" aria-label="İçindekiler">
+        {toc.length > 0 && (
+          <nav>
+            <p class="toc-title">Bu yazıda</p>
+            <ol>{toc.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}</ol>
+          </nav>
+        )}
+      </aside>
+      <div>
+        {d.summary && (
+          <section class="summary" aria-labelledby="kisaca">
+            <h2 id="kisaca">Kısaca</h2>
+            <ul>{d.summary.map((s) => <li>{s}</li>)}</ul>
+          </section>
+        )}
+        <div class="prose"><Content /></div>
+
+        {d.faq && d.faq.length > 0 && (
+          <section class="post-faq" aria-labelledby="yazi-sss">
+            <h2 id="yazi-sss">Sık sorulan sorular</h2>
+            <Faq items={d.faq} />
+          </section>
+        )}
+
+        <aside class="author-box" aria-label="Yazar hakkında">
+          <p><strong>{d.author}</strong>, {site.name}'nın kurucusudur. <a href={url('/hakkimizda/')}>Hakkımızda sayfasında</a> deneyimini okuyabilirsiniz.</p>
+        </aside>
+      </div>
+    </div>
+  </article>
+  <CtaBand title="Siteniz yapay zekâ aramalarında görünüyor mu?" text="Sitenizi SEO ve GEO açısından birlikte inceleyelim; nereden başlamanız gerektiğini somut adımlarla paylaşalım." />
+</Base>
+<style>
+  .article-head { padding-block: 2rem 2.5rem; max-width: 60rem; }
+  .article-head h1 { font-size: var(--fs-4); }
+  .cat { font-weight: 600; margin-bottom: 0.75rem; }
+  :global(.article-img) { margin-bottom: 3rem; }
+  .article-body { display: grid; grid-template-columns: 240px minmax(0, 720px); gap: 4rem; padding-bottom: 5rem; }
+  .toc nav { position: sticky; top: 96px; font-size: 0.95rem; }
+  .toc-title { font-weight: 600; margin-bottom: 0.75rem; }
+  .toc ol { margin: 0; padding-left: 1.1em; display: grid; gap: 0.5rem; }
+  .toc a { text-decoration: none; color: var(--gri); }
+  .toc a:hover { color: var(--petrol); text-decoration: underline; }
+  .summary { background: var(--turkuaz); padding: 1.5rem 1.75rem; border-radius: var(--radius); margin-bottom: 2.5rem; }
+  .summary h2 { font-size: var(--fs-1); margin-bottom: 0.75rem; }
+  .summary ul { margin: 0; padding-left: 1.2em; display: grid; gap: 0.6rem; }
+  .post-faq { margin-top: 4rem; }
+  .post-faq h2 { font-size: var(--fs-2); }
+  .author-box { margin-top: 3rem; padding: 1.5rem; border: 1px solid var(--cizgi); border-radius: var(--radius); background: var(--beyaz); }
+  .author-box p { margin: 0; }
+  @media (max-width: 960px) { .article-body { grid-template-columns: 1fr; gap: 0; } .toc { display: none; } }
+</style>

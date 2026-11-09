@@ -1,0 +1,113 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../data/site';
+import { url, absUrl, isPreview } from '../lib/url';
+
+interface Crumb { name: string; path: string }
+interface Props {
+  title: string;            // ≈50–60 karakter
+  description: string;      // ≈140–160 karakter
+  ogType?: 'website' | 'article';
+  image?: string;           // mutlak URL
+  schema?: Record<string, unknown>[];
+  crumbs?: Crumb[];
+  noindex?: boolean;
+}
+
+const { title, description, ogType = 'website', image, schema = [], crumbs = [], noindex = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+const ogImage = image || absUrl('/og-default.png');
+const fullTitle = title.includes(site.name) ? title : `${title} | ${site.name}`;
+
+// Her sayfada: kurum + web sitesi varlığı (GEO: varlık netliği)
+const orgId = absUrl('/#kurum');
+const baseSchema: Record<string, unknown>[] = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ProfessionalService',
+    '@id': orgId,
+    name: site.name,
+    description: site.description,
+    url: absUrl('/'),
+    logo: absUrl('/favicon.svg'),
+    image: ogImage,
+    founder: { '@type': 'Person', name: site.founder, '@id': absUrl('/hakkimizda/#mert') },
+    address: { '@type': 'PostalAddress', addressLocality: site.city, addressCountry: site.country },
+    areaServed: { '@type': 'Country', name: site.areaServed },
+    knowsAbout: ['Sosyal medya yönetimi', 'Web tasarım', 'Dijital reklam', 'İçerik üretimi', 'SEO', 'GEO'],
+    sameAs: Object.values(site.social).filter(Boolean),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': absUrl('/#site'),
+    url: absUrl('/'),
+    name: site.name,
+    inLanguage: 'tr-TR',
+    publisher: { '@id': orgId },
+  },
+];
+if (crumbs.length) {
+  baseSchema.push({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [{ name: 'Ana sayfa', path: '/' }, ...crumbs].map((c, i) => ({
+      '@type': 'ListItem', position: i + 1, name: c.name, item: absUrl(c.path),
+    })),
+  });
+}
+const allSchema = [...baseSchema, ...schema];
+const robots = isPreview || noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large';
+---
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="robots" content={robots} />
+    <meta name="theme-color" content="#40E0D0" />
+    <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
+    <link rel="sitemap" href={url('/sitemap-index.xml')} />
+    <link rel="alternate" type="text/plain" title="llms.txt" href={url('/llms.txt')} />
+    <link rel="alternate" type="application/rss+xml" title={`${site.name} Blog`} href={url('/blog/rss.xml')} />
+    <link rel="preconnect" href="https://images.unsplash.com" crossorigin />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:locale" content={site.locale} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <slot name="head" />
+
+    {allSchema.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
+  </head>
+  <body>
+    <a class="skip" href="#icerik">İçeriğe geç</a>
+    <Header />
+    {crumbs.length > 0 && (
+      <nav class="crumbs wrap" aria-label="Sayfa yolu">
+        <ol>
+          <li><a href={url('/')}>Ana sayfa</a></li>
+          {crumbs.map((c, i) => (
+            <li>{i === crumbs.length - 1 ? <span aria-current="page">{c.name}</span> : <a href={url(c.path)}>{c.name}</a>}</li>
+          ))}
+        </ol>
+      </nav>
+    )}
+    <main id="icerik">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

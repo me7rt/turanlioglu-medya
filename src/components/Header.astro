@@ -1,0 +1,37 @@
+---
+import Logo from './Logo.astro';
+import { nav, site } from '../data/site';
+import { url } from '../lib/url';
+const current = Astro.url.pathname;
+---
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href={url('/')} aria-label={`${site.name} ana sayfa`}>
+      <Logo />
+      <span>{site.name}</span>
+    </a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="ana-menu" aria-label="Menüyü aç">
+      <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h18M3 12h18M3 17h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <nav class="nav" id="ana-menu" aria-label="Ana menü">
+      {nav.map((item) => {
+        const href = url(item.href);
+        return <a href={href} aria-current={current.startsWith(href) ? 'page' : undefined}>{item.label}</a>;
+      })}
+      <a class="btn" href={url('/iletisim/')}>Ön görüşme planla</a>
+    </nav>
+  </div>
+</header>
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('.menu-toggle');
+  const menu = document.getElementById('ana-menu');
+  btn?.addEventListener('click', () => {
+    const open = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!open));
+    btn.setAttribute('aria-label', open ? 'Menüyü aç' : 'Menüyü kapat');
+    menu?.setAttribute('data-open', String(!open));
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && btn?.getAttribute('aria-expanded') === 'true') { btn.click(); btn.focus(); }
+  });
+</script>
