@@ -9,7 +9,7 @@ Görseller `images.unsplash.com` üzerinden çağrılıyor. Kimlikler ve alt met
 | Anahtar | Unsplash kimliği | Kullanıldığı yer |
 |---|---|---|
 | hero | photo-1552664730-d307ca884978 | Ana sayfa giriş |
-| social | photo-1611162617474-5b21e879e113 | Sosyal medya yönetimi |
+| social | photo-1512941937669-90a1b58e7e9c | Sosyal medya yönetimi |
 | web | photo-1498050108023-c5249f4df085 | Web tasarım |
 | ads | photo-1460925895917-afdab827c52f | Dijital reklam |
 | content | photo-1492691527719-9d1e07e534b4 | İçerik üretimi |
@@ -18,6 +18,8 @@ Görseller `images.unsplash.com` üzerinden çağrılıyor. Kimlikler ve alt met
 | blogGeo | photo-1504868584819-f8e8b4b6d7e3 | GEO blog yazısı |
 
 Revize planı: Aşama 3'te bu görseller gerçek ekip, ofis ve iş fotoğraflarıyla değiştirilecek.
+
+Kural: marka logosu (Netflix, Instagram vb.) görünen stok görsel kullanılmaz.
 
 ## Fontlar
 

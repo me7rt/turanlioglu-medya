@@ -241,20 +241,23 @@ function servicePreview() {
     gsap.set(box, { xPercent: 0, yPercent: -50, scale: 0.6, opacity: 0, rotate: -6, transformOrigin: '0% 50%' });
     const xTo = gsap.quickTo(box, 'x', { duration: 0.6, ease: 'power3' });
     const yTo = gsap.quickTo(box, 'y', { duration: 0.6, ease: 'power3' });
-    let lastX = 0;
+    let lastX = 0, shown = false, current = '';
+    const hide = () => { if (!shown) return; shown = false; current = ''; gsap.to(box, { scale: 0.6, opacity: 0, duration: 0.3, ease: EASE, overwrite: 'auto' }); };
+    // Kart yalnızca imleç öndeki bir hizmetin üzerindeyken görünür; kaydırma başlayınca hemen kaybolur.
     list.addEventListener('pointermove', (e) => {
       xTo(e.clientX + 56); yTo(e.clientY);
-      gsap.to(box, { rotate: Math.max(-12, Math.min(12, (e.clientX - lastX) * 0.6)), duration: 0.5, overwrite: 'auto' });
+      const item = (e.target as Element).closest<HTMLElement>('[data-preview]');
+      const li = item?.closest('li');
+      if (!item || (li && list.classList.contains('wheel') && !li.classList.contains('front'))) { hide(); return; }
+      const src = item.dataset.preview!;
+      if (src !== current) { current = src; imgs.forEach((im, k) => im.classList.toggle('on', k === src)); }
+      if (!shown) { shown = true; gsap.to(box, { scale: 1, opacity: 1, duration: 0.45, ease: EASE, overwrite: 'auto' }); }
+      gsap.to(box, { rotate: Math.max(-12, Math.min(12, (e.clientX - lastX) * 0.6)), duration: 0.5 });
       lastX = e.clientX;
     });
-    list.querySelectorAll<HTMLElement>('[data-preview]').forEach((item) => {
-      item.addEventListener('pointerenter', () => {
-        const src = item.dataset.preview!;
-        imgs.forEach((im, k) => im.classList.toggle('on', k === src));
-        gsap.to(box, { scale: 1, opacity: 1, duration: 0.5, ease: EASE });
-      });
-    });
-    list.addEventListener('pointerleave', () => gsap.to(box, { scale: 0.6, opacity: 0, duration: 0.4, ease: EASE }));
+    window.addEventListener('wheel', hide, { passive: true });
+    window.addEventListener('scroll', hide, { passive: true });
+    list.addEventListener('pointerleave', hide);
   });
 }
 

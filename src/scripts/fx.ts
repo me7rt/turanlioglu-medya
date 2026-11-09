@@ -205,7 +205,7 @@ export function wheel(list: HTMLElement | null) {
   const section = list.closest('section')!;
   gsap.to(spin, {
     rotation: -step * (originals.length - 1) - step * 0.0001, ease: 'none', onUpdate: paint,
-    scrollTrigger: { trigger: section, start: 'top top', end: '+=220%', pin: true, scrub: 1, invalidateOnRefresh: true, onRefresh: layout },
+    scrollTrigger: { trigger: section, start: 'top top', end: '+=140%', pin: true, scrub: 1, invalidateOnRefresh: true, onRefresh: layout },
   });
 }
 

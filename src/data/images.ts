@@ -13,8 +13,8 @@ export const images: Record<string, StockImage> = {
     w: 1600, h: 1067,
   },
   social: {
-    id: 'photo-1611162617474-5b21e879e113',
-    alt: 'Ekranında sosyal medya uygulamaları görünen akıllı telefon',
+    id: 'photo-1512941937669-90a1b58e7e9c',
+    alt: 'Elinde akıllı telefon tutan kişi',
     w: 1600, h: 1067,
   },
   web: {
