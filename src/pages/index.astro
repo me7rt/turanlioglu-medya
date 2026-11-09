@@ -106,6 +106,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
         <h2 id="surec-baslik" data-rgb>Nasıl çalışıyoruz?</h2>
         <p class="lead" data-reveal>Her iş aynı dört adımdan geçer; ne zaman ne olacağını baştan bilirsiniz.</p>
       </div>
+      <div class="steps-line" aria-hidden="true"><span class="steps-dot"></span></div>
       <ol class="steps" data-hscroll>
         {process.map((p, i) => (
           <li data-line>
@@ -227,6 +228,12 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .process :global(.process-arcs) { right: -4%; bottom: -4%; width: min(46vw, 480px); transform: scaleX(-1); z-index: -1; }
 
   .process { background: var(--turkuaz-50); }
+  /* Kartların üstünde 1→4 akan sinyal çizgisi */
+  .steps-line { position: relative; height: 2px; margin: 0 0 1.75rem; background: rgb(6 42 45 / 0.12); }
+  .steps-line::before { content: ''; position: absolute; inset: 0; background: var(--turkuaz-700); transform-origin: left; transform: scaleX(var(--draw, 0)); }
+  .steps-dot { position: absolute; top: 50%; left: 0; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; background: var(--turkuaz); box-shadow: 0 0 0 4px rgb(64 224 208 / 0.3), 0 0 18px var(--turkuaz); opacity: 0; }
+  :global(.no-motion) .steps-line::before { transform: none; }
+  @media (max-width: 1000px) { .steps-line { display: none; } }
   .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; counter-reset: s; }
   .steps li { border-top: 4px solid var(--turkuaz); padding-top: 1.25rem; }
   .step-no { display: block; font-family: var(--font-display); font-size: var(--fs-4); font-weight: 700; line-height: 1; color: var(--turkuaz-700); margin-bottom: 1rem; }

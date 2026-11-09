@@ -167,13 +167,34 @@ export function horizontal(track: HTMLElement | null) {
   // Mert: kaydırma hiçbir yerde "durmuş gibi" hissettirmesin. Kartlar yana kaymaz, yan yana sabit durur;
   // sadece ekrana girerken eğik ve aşağıdan gelip yerine oturur.
   gsap.fromTo(track.children, { rotate: (i) => (i % 2 ? 5 : -5), y: 60, opacity: 0 }, {
-    rotate: 0, y: 0, opacity: 1, duration: 0.9, ease: 'power3.out', stagger: 0.12,
+    rotate: 0, y: 0, opacity: 1, duration: 0.9, ease: 'power3.out', stagger: 0.12, clearProps: 'transform',
     scrollTrigger: { trigger: track, start: 'top 80%', once: true },
+    onComplete: () => signal(track),
+  });
+}
+
+// Kartlar oturunca turkuaz bir sinyal 1'den 4'e akar; uğradığı kartın numarası hafifçe zıplar. Bir kez oynar.
+function signal(track: HTMLElement) {
+  const line = track.parentElement?.querySelector<HTMLElement>('.steps-line');
+  const cards = [...track.children] as HTMLElement[];
+  const nums = cards.map((c) => c.querySelector('.step-no'));
+  const tl = gsap.timeline();
+  if (line && getComputedStyle(line).display !== 'none') {
+    tl.fromTo(line, { '--draw': 0 }, { '--draw': 1, duration: 1.6, ease: 'none' }, 0);
+    tl.fromTo(line.querySelector('.steps-dot'), { left: '0%', opacity: 1 }, { left: '100%', duration: 1.6, ease: 'none' }, 0);
+    tl.to(line.querySelector('.steps-dot'), { opacity: 0, duration: 0.3 }, 1.6);
+  }
+  cards.forEach((c, i) => {
+    const t = 1.6 * (0.125 + 0.25 * i) - 0.1; // nokta kartın ortasına gelirken
+    tl.fromTo(nums[i], { scale: 1 }, { scale: 1.16, duration: 0.22, ease: 'power2.out', yoyo: true, repeat: 1, transformOrigin: 'left bottom' }, t);
+    tl.fromTo(c, { '--glow': 0 }, { '--glow': 1, duration: 0.3, yoyo: true, repeat: 1, ease: 'sine.inOut' }, t);
   });
 }
 
 // ============ 6. Dijital "şifre çözme" başlıkları ============
-const GLYPHS = 'ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ0123456789#%&*+=<>/';
+const GLYPHS = 'ABCDEFGHKLMNOPRSTUVYZ';
+// Mert: daha hızlı ve düzenli. Harfler soldan sağa çözülür; önde yalnızca 3 harflik dar bir "kod" penceresi,
+// geri kalan harfler yerini tutar ama görünmez (genişlik zıplamaz). Glifler her karede değil, 45 ms'de bir değişir.
 export function scramble() {
   gsap.utils.toArray<HTMLElement>('[data-scramble]').forEach((el) => {
     const text = el.textContent?.trim() ?? '';
@@ -183,15 +204,28 @@ export function scramble() {
     out.textContent = text;
     el.textContent = '';
     el.appendChild(out);
+    const chars = [...text];
+    const WIN = 3;
+    let running = false;
+    const esc = (c: string) => (c === '<' ? '&lt;' : c === '&' ? '&amp;' : c);
     const run = () => {
+      if (running) return;
+      running = true;
       const o = { p: 0 };
+      let last = 0, glyphs: string[] = [];
       gsap.to(o, {
-        p: 1, duration: 0.55, ease: 'power1.out',
+        p: 1, duration: 0.38, ease: 'none',
         onUpdate: () => {
-          const done = Math.floor(o.p * text.length);
-          out.textContent = [...text].map((c, i) => (i < done || c === ' ' ? c : GLYPHS[(Math.random() * GLYPHS.length) | 0])).join('');
+          const now = performance.now();
+          if (now - last > 45) { last = now; glyphs = chars.map(() => GLYPHS[(Math.random() * GLYPHS.length) | 0]); }
+          const done = Math.floor(o.p * (chars.length + WIN)) - WIN;
+          out.innerHTML = chars.map((c, i) => {
+            if (i < done || c === ' ') return esc(c);
+            if (i < done + WIN) return `<span class="sc">${c === c.toLocaleLowerCase("tr") ? glyphs[i].toLowerCase() : glyphs[i]}</span>`;
+            return `<span class="sc-rest">${esc(c)}</span>`;
+          }).join('');
         },
-        onComplete: () => { out.textContent = text; },
+        onComplete: () => { out.textContent = text; running = false; },
       });
     };
     ScrollTrigger.create({ trigger: el, start: 'top 85%', once: true, onEnter: run });
