@@ -476,3 +476,4 @@ a:hover .zoom .img-frame img, .zoom:hover .img-frame img { transform: scale(1.06
 .play-toggle[aria-pressed='true'] .i-pause { display: none; }
 .play-toggle[aria-pressed='true'] .i-play { display: block; }
 .no-motion .play-toggle { display: none; }
+.on-dark .play-toggle { background: var(--turkuaz); color: var(--petrol); }
