@@ -44,10 +44,11 @@ import { url } from '../lib/url';
   .ws-phone {
     position: absolute; right: 0; bottom: 2.2rem; width: 26%; border-radius: 16px; overflow: hidden;
     border: 5px solid var(--petrol); background: var(--petrol); box-shadow: 0 20px 40px -18px rgb(6 42 45 / 0.6);
-    transition: transform 0.6s var(--ease);
+    transition: transform 0.9s cubic-bezier(0.65, 0, 0.2, 1);
   }
   .ws-phone :global(.img-frame) { border-radius: 10px; }
-  .ws-card:hover .ws-phone { transform: translate(6px, -8px) rotate(3deg); }
+  /* Üzerine gelince telefon tarayıcının sağından soluna kayar */
+  .ws-card:hover .ws-phone, .ws-card:focus-visible .ws-phone { transform: translateX(-292%) rotate(-4deg); }
   .ws-cap { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 1rem; font-weight: 600; font-size: 1.05rem; }
   .ws-cap svg { width: 1em; height: 1em; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.3s var(--ease); }
   .ws-card:hover .ws-cap { color: var(--turkuaz-700); }
