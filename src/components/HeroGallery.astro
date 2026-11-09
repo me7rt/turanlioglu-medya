@@ -1,0 +1,61 @@
+---
+// Açılış galerisi: zıt yönlere kayan dikey görsel sütunları. Tamamen süs (aria-hidden);
+// durdurma düğmesi galerinin köşesinde (WCAG 2.2.2).
+import Img from './Img.astro';
+// Kısa etiketler (kart üstünde sığsın)
+const label: Record<string, string> = { social: 'Sosyal medya', web: 'Web tasarım', ads: 'Dijital reklam', content: 'İçerik ve video', seo: 'SEO ve GEO' };
+const cols: string[][] = [
+  ['social', 'hero', 'seo', 'content'],
+  ['web', 'team', 'ads', 'blogGeo'],
+  ['content', 'ads', 'social', 'web'],
+];
+---
+<div class="hg" data-hero-gallery>
+  <div class="hg-cols" aria-hidden="true">
+    {cols.map((col, ci) => (
+      <div class:list={['hg-col', `hg-col--${ci}`]}>
+        <div class="hg-track">
+          {[0, 1].map(() => col.map((k, i) => (
+            <figure class:list={['hg-card', (i + ci) % 2 ? 'tall' : 'short']}>
+              <Img name={k} decorative sizes="(min-width: 900px) 15vw, 40vw" ratio={(i + ci) % 2 ? '3/4' : '1/1'} />
+              {label[k] && <figcaption class="hg-chip"><span class="hg-dot"></span>{label[k]}</figcaption>}
+            </figure>
+          )))}
+        </div>
+      </div>
+    ))}
+  </div>
+  <button type="button" class="play-toggle" data-play-toggle aria-pressed="false" aria-label="Görsel akışını durdur">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path class="i-pause" d="M8 5v14M16 5v14" /><path class="i-play" d="M7 5l12 7-12 7z" /></svg>
+  </button>
+</div>
+<style>
+  .hg :global(.play-toggle) { top: 12px; bottom: auto; }
+  .hg { position: relative; height: clamp(440px, 72vh, 720px); }
+  .hg-cols {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; height: 100%; overflow: hidden;
+    mask-image: linear-gradient(transparent, #000 12%, #000 88%, transparent);
+    -webkit-mask-image: linear-gradient(transparent, #000 12%, #000 88%, transparent);
+  }
+  .hg-track { display: grid; gap: 14px; will-change: transform; }
+  :global(.motion) .hg-track { animation: hg-up 38s linear infinite; }
+  :global(.motion) .hg-col--1 .hg-track { animation-name: hg-down; animation-duration: 46s; }
+  :global(.motion) .hg-col--2 .hg-track { animation-duration: 42s; }
+  .hg.paused .hg-track, .hg.offscreen .hg-track { animation-play-state: paused !important; }
+  @keyframes hg-up { to { transform: translate3d(0, calc(-50% - 7px), 0); } }
+  @keyframes hg-down { from { transform: translate3d(0, calc(-50% - 7px), 0); } to { transform: translate3d(0, 0, 0); } }
+  .hg-card { position: relative; margin: 0; border-radius: 22px; overflow: hidden; box-shadow: 0 18px 40px -22px rgb(6 42 45 / 0.55); }
+  .hg-card :global(.img-frame) { border-radius: 0; }
+  .hg-card :global(img) { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s var(--ease); }
+  .hg-chip {
+    position: absolute; left: 10px; bottom: 10px; display: inline-flex; align-items: center; gap: 0.45rem; max-width: calc(100% - 20px);
+    padding: 0.4rem 0.8rem 0.4rem 0.45rem; border-radius: 999px; background: rgb(255 255 255 / 0.92); color: var(--petrol);
+    font-size: 0.82rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; backdrop-filter: blur(6px);
+  }
+  .hg-dot { flex: none; width: 1.3rem; height: 1.3rem; border-radius: 50%; background: var(--turkuaz); box-shadow: inset 0 0 0 4px var(--petrol); }
+  @media (max-width: 900px) {
+    .hg { height: 420px; }
+    .hg-cols { grid-template-columns: repeat(2, 1fr); }
+    .hg-col--2 { display: none; }
+  }
+</style>

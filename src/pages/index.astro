@@ -1,7 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import Img from '../components/Img.astro';
-import HeroSignal from '../components/HeroSignal.astro';
+import HeroGallery from '../components/HeroGallery.astro';
+import WorkStrip from '../components/WorkStrip.astro';
 import Faq from '../components/Faq.astro';
 import CtaBand from '../components/CtaBand.astro';
 import Arcs from '../components/Arcs.astro';
@@ -35,7 +36,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
       </div>
-      <HeroSignal />
+      <HeroGallery />
     </div>
   </section>
 
@@ -85,15 +86,17 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   </section>
 
   <section class="section work" aria-labelledby="isler-baslik">
-    <div class="wrap work-grid">
+    <div class="wrap work-head">
       <div>
-        <p class="kicker">Portfolyo</p>
+        <p class="kicker">Neler üretiyoruz</p>
         <h2 id="isler-baslik" data-scramble>Seçili işler</h2>
-        <p>Burada gerçek müşteri projeleri; problem, yaklaşım ve ölçülen sonuçlarıyla yer alacak. Uydurma vaka ya da rakam koymuyoruz.</p>
+      </div>
+      <div>
+        <p>Şimdilik her hizmetten örnek ekranlar var. Gerçek müşteri projeleri; problem, yaklaşım ve ölçülen sonuçlarıyla buraya gelecek.</p>
         <p class="todo">[DOLDURULACAK: izin alınmış 3–4 gerçek proje]</p>
       </div>
-      <div class="work-media blob" data-curtain><div class="arch"><Img name="team" sizes="(min-width: 900px) 40vw, 100vw" ratio="4/5" /></div></div>
     </div>
+    <WorkStrip />
   </section>
 
   <section class="section process" aria-labelledby="surec-baslik">
@@ -163,10 +166,10 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .hero-badge-row { position: absolute; left: 0; right: 0; top: 0; display: flex; justify-content: flex-end; pointer-events: none; z-index: 2; }
   .hero-badge-row :global(.badge) { pointer-events: auto; transform: translateY(-50%); }
   .hero-grid {
-    display: grid; grid-template-columns: 1.25fr 1fr; align-items: center; gap: 2rem;
-    padding-block: clamp(3.5rem, 2rem + 6vw, 8rem) clamp(5rem, 4rem + 6vw, 10rem);
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: clamp(2rem, 4vw, 4rem);
+    padding-block: clamp(2rem, 1rem + 3vw, 4rem) clamp(5rem, 4rem + 6vw, 9rem);
   }
-  .hero h1 { font-size: var(--fs-5); line-height: 0.92; letter-spacing: -0.04em; margin-bottom: 0.4em; font-variation-settings: 'wdth' 85; }
+  .hero h1 { font-size: clamp(3rem, 1.4rem + 4.6vw, 6.4rem); line-height: 0.92; letter-spacing: -0.04em; margin-bottom: 0.4em; font-variation-settings: 'wdth' 85; }
   .hero-lead { font-size: var(--fs-1); max-width: 46ch; }
   .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
   .hero .btn--ghost:hover { background: var(--petrol); }
@@ -202,8 +205,9 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 
   .work { background: var(--kagit); }
   .work h2 { font-size: var(--fs-4); }
-  .work-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(2rem, 6vw, 7rem); align-items: center; }
-  .work-media { max-width: 440px; justify-self: center; width: 100%; }
+  .work-head { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem clamp(2rem, 6vw, 6rem); align-items: end; }
+  .work-head h2 { margin: 0; }
+  .work-head p:last-child { margin-bottom: 0; }
 
   /* Hizmetler: koyu sahne */
   .stage { position: relative; overflow: hidden; isolation: isolate; background: var(--petrol); color: #c9e2df; }
@@ -234,7 +238,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .faq-grid { display: grid; grid-template-columns: 1fr 1.6fr; gap: 3rem; }
 
   @media (max-width: 900px) {
-    .hero-grid, .work-grid, .faq-grid { grid-template-columns: 1fr; }
+    .hero-grid, .work-head, .faq-grid { grid-template-columns: 1fr; }
     .steps { grid-template-columns: 1fr 1fr; }
     .post-list { grid-template-columns: 1fr; }
   }

@@ -1,0 +1,59 @@
+---
+// Kendiliğinden kayan kart şeridi: tarayıcı + telefon çerçevesinde hizmet örnekleri.
+// Gerçek projeler gelince kartlar onlarla değişecek (uydurma müşteri/alan adı yok).
+// Fareyle üzerine gelinen kart büyür, şerit durur. Elle de kaydırılabilir. Durdurma düğmesi var (WCAG 2.2.2).
+import Img from './Img.astro';
+import { services } from '../data/site';
+import { url } from '../lib/url';
+---
+<div class="ws" data-work-strip>
+  <div class="ws-scroller" data-ws-scroller tabindex="0" aria-label="Hizmet örnekleri, yatay kaydırılabilir" role="region">
+    <ul class="ws-row">
+      {[0, 1].map((copy) => services.map((s) => (
+        <li class="ws-item" inert={copy === 1 ? true : undefined} aria-hidden={copy === 1 ? 'true' : undefined}>
+          <a href={url(`/hizmetler/${s.slug}/`)} class="ws-card" data-cursor="İncele">
+            <div class="ws-browser">
+              <div class="ws-bar" aria-hidden="true"><i></i><i></i><i></i><span>{s.name}</span></div>
+              <Img name={s.image} decorative sizes="(min-width: 900px) 34vw, 80vw" ratio="16/10" />
+            </div>
+            <div class="ws-phone" aria-hidden="true"><Img name={s.image} decorative sizes="120px" ratio="9/17" /></div>
+            <span class="ws-cap">{s.name} <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" /></svg></span>
+          </a>
+        </li>
+      )))}
+    </ul>
+  </div>
+  <button type="button" class="play-toggle" data-play-toggle aria-pressed="false" aria-label="Kart akışını durdur">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path class="i-pause" d="M8 5v14M16 5v14" /><path class="i-play" d="M7 5l12 7-12 7z" /></svg>
+  </button>
+</div>
+<style>
+  .ws :global(.play-toggle) { top: -0.5rem; bottom: auto; right: var(--gutter); }
+  .ws { position: relative; }
+  .ws-scroller {
+    overflow-x: auto; overflow-y: hidden; padding-block: 2.5rem 1.5rem; scrollbar-width: thin; scrollbar-color: var(--turkuaz-700) transparent;
+    mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+  }
+  .ws-scroller:focus-visible { outline-offset: -4px; }
+  .ws-row { list-style: none; margin: 0; padding: 0 var(--gutter); display: flex; gap: clamp(1.5rem, 3vw, 3rem); width: max-content; }
+  .ws-item { flex: none; width: clamp(280px, 30vw, 460px); }
+  .ws-card { position: relative; display: block; text-decoration: none; padding-right: 2.2rem; transform-origin: center 60%; transition: transform 0.6s var(--ease); }
+  .ws-card:hover, .ws-card:focus-visible { transform: scale(1.1); z-index: 2; }
+  .ws-browser { border-radius: 14px; overflow: hidden; background: var(--beyaz); box-shadow: 0 0 0 1px var(--cizgi), 0 24px 50px -28px rgb(6 42 45 / 0.5); }
+  .ws-bar { display: flex; align-items: center; gap: 6px; padding: 0.6rem 0.9rem; font-size: 0.82rem; color: var(--gri); background: var(--beyaz); }
+  .ws-bar i { width: 8px; height: 8px; border-radius: 50%; background: #c7d6d4; }
+  .ws-bar span { margin-left: 0.5rem; }
+  .ws-browser :global(.img-frame) { border-radius: 0; }
+  .ws-phone {
+    position: absolute; right: 0; bottom: 2.2rem; width: 26%; border-radius: 16px; overflow: hidden;
+    border: 5px solid var(--petrol); background: var(--petrol); box-shadow: 0 20px 40px -18px rgb(6 42 45 / 0.6);
+    transition: transform 0.6s var(--ease);
+  }
+  .ws-phone :global(.img-frame) { border-radius: 10px; }
+  .ws-card:hover .ws-phone { transform: translate(6px, -8px) rotate(3deg); }
+  .ws-cap { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 1rem; font-weight: 600; font-size: 1.05rem; }
+  .ws-cap svg { width: 1em; height: 1em; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.3s var(--ease); }
+  .ws-card:hover .ws-cap { color: var(--turkuaz-700); }
+  .ws-card:hover .ws-cap svg { transform: translate(3px, -3px); }
+</style>

@@ -372,7 +372,7 @@ body::after {
 /* Dönen rozet */
 .badge {
   position: relative; display: grid; place-items: center; flex: none;
-  width: clamp(112px, 10vw + 40px, 156px); aspect-ratio: 1; border-radius: 50%;
+  width: clamp(112px, 10vw + 40px, 156px); aspect-ratio: 1; border-radius: 50%; overflow: hidden;
   background: var(--petrol); color: var(--turkuaz); text-decoration: none;
   box-shadow: 0 18px 40px -12px rgb(6 42 45 / 0.45);
 }
@@ -463,3 +463,16 @@ a:hover .zoom .img-frame img, .zoom:hover .img-frame img { transform: scale(1.06
 .no-motion .footer-mark { --fill: 100%; }
 .site-footer { overflow: hidden; }
 @media (max-width: 820px) { .blob::before { inset: 8% 0 -5% 8%; } .blob { margin-right: 4%; } }
+
+/* Akışı durdur/başlat düğmesi (kayan galeriler için, WCAG 2.2.2) */
+.play-toggle {
+  position: absolute; right: 12px; bottom: 12px; z-index: 3; width: 44px; height: 44px; border-radius: 50%; border: 0; cursor: pointer;
+  display: grid; place-items: center; background: var(--petrol); color: var(--turkuaz); box-shadow: 0 8px 20px -8px rgb(6 42 45 / 0.6);
+  transition: transform 0.3s var(--ease);
+}
+.play-toggle:hover { transform: scale(1.08); }
+.play-toggle svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.play-toggle .i-play { display: none; fill: currentColor; }
+.play-toggle[aria-pressed='true'] .i-pause { display: none; }
+.play-toggle[aria-pressed='true'] .i-play { display: block; }
+.no-motion .play-toggle { display: none; }

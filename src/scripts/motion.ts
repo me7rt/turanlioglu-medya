@@ -44,6 +44,8 @@ function init() {
   fx.water(hero);
   fx.grow();
   fx.explorer(document.querySelector('[data-explorer]'));
+  fx.heroGallery(document.querySelector('[data-hero-gallery]'));
+  fx.workStrip(document.querySelector('[data-work-strip]'));
   fx.horizontal(document.querySelector('[data-hscroll]'));
   fx.scramble();
   reveals();
