@@ -343,17 +343,37 @@ export function explorer(root: HTMLElement | null) {
   });
   root.addEventListener('pointerenter', () => { hovering = true; items[active].style.setProperty('--p', '1'); });
   root.addEventListener('pointerleave', () => { hovering = false; });
-  // Kendiliğinden dönmez: sayfayı kaydırdıkça sıradaki hizmete geçer (ekranı tutmaz)
+  // Kaydırınca sıradaki hizmete geçer (ekranı tutmaz) + bölüm görünürken kendiliğinden de sırayla değişir.
+  // Alttaki çizgi bir sonraki geçişe kalan süreyi gösterir. Üzerine gelince/odakta bekler.
+  const AUTO = 4; // sn
+  let inView = false, scrollIdx = -1;
+  const timer = { p: 0 };
+  let tw: gsap.core.Tween | null = null;
+  function run() {
+    tw?.kill();
+    if (!inView || hovering) return;
+    timer.p = 0;
+    tw = gsap.to(timer, {
+      p: 1, duration: AUTO, ease: 'none',
+      onUpdate: () => items[active].style.setProperty('--p', timer.p.toFixed(3)),
+      onComplete: () => { show((active + 1) % items.length); run(); },
+    });
+  }
   ScrollTrigger.create({
     trigger: root, start: 'top 65%', end: 'bottom 15%',
+    onToggle: (st) => { inView = st.isActive; if (inView) run(); else tw?.kill(); },
     onUpdate: (st) => {
       if (hovering) return;
-      const f = st.progress * items.length;
-      const i = Math.min(items.length - 1, Math.floor(f));
-      show(i);
-      items[i].style.setProperty('--p', Math.min(1, f - i).toFixed(3));
+      const i = Math.min(items.length - 1, Math.floor(st.progress * items.length));
+      if (i === scrollIdx) return; // aynı dilimdeyken otomatik geçişi bozma
+      scrollIdx = i;
+      show(i); run();
     },
   });
+  root.addEventListener('pointerenter', () => tw?.kill());
+  root.addEventListener('pointerleave', () => run());
+  root.addEventListener('focusin', () => { hovering = true; tw?.kill(); });
+  root.addEventListener('focusout', () => { hovering = false; run(); });
   // Panelde imlece göre hafif 3B eğim
   if (panel) {
     const rx = gsap.quickTo(panel, 'rotationY', { duration: 0.6, ease: 'power3' });
