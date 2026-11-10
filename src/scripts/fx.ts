@@ -337,11 +337,12 @@ export function explorer(root: HTMLElement | null) {
     items[active].classList.remove('active'); items[active].style.removeProperty('--p');
     items[i].classList.add('active');
     if (prev && next && prev !== next) {
-      gsap.to(prev, { opacity: 0, duration: 0.4, onComplete: () => { prev.classList.remove('active'); gsap.set(prev, { clearProps: 'opacity,visibility' }); } });
+      gsap.killTweensOf(next);
+      gsap.to(prev, { opacity: 0, duration: 0.3, onComplete: () => { if (slides[active] === prev) return; prev.classList.remove('active'); gsap.set(prev, { clearProps: 'opacity,visibility' }); } });
       next.classList.add('active');
-      gsap.fromTo(next.querySelector('.ex-img'), { clipPath: 'inset(0 0 100% 0 round 10px)' }, { clipPath: 'inset(0 0 0% 0 round 10px)', duration: 0.8, ease: 'expo.out' });
+      gsap.fromTo(next.querySelector('.ex-img'), { clipPath: 'inset(0 0 100% 0 round 10px)' }, { clipPath: 'inset(0 0 0% 0 round 10px)', duration: 0.6, ease: 'expo.out' });
       gsap.fromTo(next.querySelector('img'), { scale: 1.3 }, { scale: 1.06, duration: 1.1, ease: 'expo.out' });
-      gsap.fromTo(next.querySelectorAll('.ex-short, .ex-chips li'), { opacity: 0, y: 16, filter: 'blur(6px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.6, stagger: 0.05, ease: EASE, delay: 0.1 });
+      gsap.fromTo(next.querySelectorAll('.ex-short, .ex-chips li'), { opacity: 0, y: 16, filter: 'blur(6px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.45, stagger: 0.04, ease: EASE, delay: 0.05 });
       gsap.fromTo(next, { opacity: 0 }, { opacity: 1, duration: 0.3 });
     }
     active = i;
@@ -356,7 +357,7 @@ export function explorer(root: HTMLElement | null) {
   root.addEventListener('pointerleave', () => { hovering = false; });
   // Kaydırınca sıradaki hizmete geçer (ekranı tutmaz) + bölüm görünürken kendiliğinden de sırayla değişir.
   // Alttaki çizgi bir sonraki geçişe kalan süreyi gösterir. Üzerine gelince/odakta bekler.
-  const AUTO = 2; // sn
+  const AUTO = 1.2; // sn
   let inView = false, scrollIdx = -1;
   const timer = { p: 0 };
   let tw: gsap.core.Tween | null = null;
