@@ -44,6 +44,15 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   <div class="hero-photo-wrap">
     <div class="hero-photo" data-grow>
       <Img name="hero" eager sizes="100vw" ratio="21/9" />
+      <div class="hp-scrim" aria-hidden="true"></div>
+      <div class="wrap hp-msg-wrap">
+        <p class="hp-msg" data-hp-msg>
+          <span class="hp-line"><span class="hp-w">Strateji.</span></span>
+          <span class="hp-line"><span class="hp-w">İçerik.</span></span>
+          <span class="hp-line"><span class="hp-w hp-accent">Sonuç.</span></span>
+          <span class="hp-sub"><span class="hp-w">Hepsi</span> <span class="hp-w">tek</span> <span class="hp-w">planda,</span> <span class="hp-w">tek</span> <span class="hp-w">ekipte.</span></span>
+        </p>
+      </div>
     </div>
     <div class="wrap hero-badge-row"><Badge class="hero-badge" /></div>
   </div>
@@ -178,6 +187,21 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 
   .hero-photo { position: relative; }
   .hero-photo :global(.img-frame) { border-radius: 0; }
+  /* Fotoğraf üstü mesaj: soldan koyu petrol perde, kaydırdıkça kelimeler belirir */
+  .hp-scrim { position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(90deg, rgb(6 42 45 / 0.86) 0%, rgb(6 42 45 / 0.62) 38%, rgb(6 42 45 / 0.12) 70%, rgb(6 42 45 / 0) 100%); }
+  .hp-msg-wrap { position: absolute; inset: 0; display: flex; align-items: center; }
+  .hp-msg { margin: 0; max-width: none; display: flex; flex-direction: column; color: #f1fbfa;
+    font-family: var(--font-display); font-weight: 700; font-size: clamp(2.6rem, 1rem + 6vw, 7.5rem); line-height: 0.95; letter-spacing: -0.04em; font-variation-settings: 'wdth' 85; }
+  .hp-line { display: block; overflow: hidden; padding-bottom: 0.06em; }
+  .hp-w { display: inline-block; }
+  .hp-accent { color: var(--turkuaz); }
+  .hp-sub { margin-top: 0.9em; font-family: var(--font-text); font-weight: 500; font-size: clamp(1.05rem, 0.9rem + 0.6vw, 1.5rem); letter-spacing: 0; color: #cfe9e6; font-variation-settings: normal; }
+  @media (max-width: 700px) {
+    .hero-photo :global(.img-frame) { aspect-ratio: auto !important; height: clamp(420px, 78vh, 640px); }
+    .hp-scrim { background: linear-gradient(90deg, rgb(6 42 45 / 0.82), rgb(6 42 45 / 0.55)); }
+    .hp-msg { font-size: clamp(3.2rem, 15vw, 4.6rem); }
+  }
   .hero-grid { position: relative; z-index: 2; }
 
   .section-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 1rem 3rem; margin-bottom: 3rem; }

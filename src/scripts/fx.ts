@@ -155,6 +155,17 @@ export function grow() {
     const tl = gsap.timeline({ scrollTrigger: { trigger: el, start: 'top 85%', end: 'top 10%', scrub: 0.8 } });
     tl.fromTo(el, { clipPath: 'inset(0% 8% 0% 8% round 32px)' }, { clipPath: 'inset(0% 0% 0% 0% round 0px)', ease: 'none' }, 0);
     if (img) tl.fromTo(img, { scale: 1.3 }, { scale: 1, ease: 'none' }, 0);
+    // Fotoğraf üstü mesaj: büyük kelimeler alttan, alt satır kelime kelime belirir (kaydırmaya bağlı)
+    const msg = el.querySelector<HTMLElement>('[data-hp-msg]');
+    if (msg) {
+      const big = msg.querySelectorAll('.hp-line > .hp-w');
+      const sub = msg.querySelectorAll('.hp-sub .hp-w');
+      gsap.set(big, { yPercent: 105, rotate: 4 });
+      gsap.set(sub, { opacity: 0, y: 14, filter: 'blur(6px)' });
+      const mt = gsap.timeline({ scrollTrigger: { trigger: el, start: 'top 75%', end: 'center 45%', scrub: 0.6 } });
+      mt.to(big, { yPercent: 0, rotate: 0, stagger: 0.35, duration: 1, ease: 'power3.out' })
+        .to(sub, { opacity: 1, y: 0, filter: 'blur(0px)', stagger: 0.15, duration: 0.6, ease: 'power2.out' }, '-=0.3');
+    }
   });
 }
 
