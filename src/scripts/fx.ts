@@ -353,8 +353,6 @@ export function explorer(root: HTMLElement | null) {
     a.addEventListener('pointerenter', go);
     a.addEventListener('focus', go);
   });
-  root.addEventListener('pointerenter', () => { hovering = true; items[active].style.setProperty('--p', '1'); });
-  root.addEventListener('pointerleave', () => { hovering = false; });
   // Kaydırınca sıradaki hizmete geçer (ekranı tutmaz) + bölüm görünürken kendiliğinden de sırayla değişir.
   // Alttaki çizgi bir sonraki geçişe kalan süreyi gösterir. Üzerine gelince/odakta bekler.
   const AUTO = 1.2; // sn
@@ -382,8 +380,10 @@ export function explorer(root: HTMLElement | null) {
       show(i); run();
     },
   });
-  root.addEventListener('pointerenter', () => tw?.kill());
-  root.addEventListener('pointerleave', () => run());
+  // Yalnızca listedeki bir hizmetin üzerindeyken bekler; bölümün geri kalanında geçiş devam eder
+  const list = root.querySelector<HTMLElement>('.ex-list');
+  list?.addEventListener('pointerover', (e) => { if (!(e.target as HTMLElement).closest('li')) return; hovering = true; tw?.kill(); items[active].style.setProperty('--p', '1'); });
+  list?.addEventListener('pointerleave', () => { hovering = false; run(); });
   root.addEventListener('focusin', () => { hovering = true; tw?.kill(); });
   root.addEventListener('focusout', () => { hovering = false; run(); });
   // Panelde imlece göre hafif 3B eğim
