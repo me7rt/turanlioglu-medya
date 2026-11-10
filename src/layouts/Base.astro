@@ -69,6 +69,13 @@ const robots = isPreview || noindex ? 'noindex, nofollow' : 'index, follow, max-
     <script is:inline>
       // Hareket varsayılan olarak AÇIK. Kendi kendine 5 sn'den uzun dönen bir şey yok: sürekli hareketler
       // kaydırmaya ya da imlece bağlı (WCAG 2.2.2 düğmesiz karşılanır).
+      // Tema: kayıtlı tercih, yoksa cihazın koyu/açık ayarı
+      (function () {
+        var t = null;
+        try { t = localStorage.getItem('tema'); } catch (e) {}
+        if (!t) t = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.dataset.theme = t;
+      })();
       (function () {
         var d = document.documentElement, pref = null;
         try { pref = localStorage.getItem('hareket'); } catch (e) {}

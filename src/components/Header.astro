@@ -20,9 +20,23 @@ const current = Astro.url.pathname;
       })}
       <a class="btn btn--turkuaz" href={url('/iletisim/')}>Teklif al</a>
     </nav>
+    <button class="theme-toggle" type="button" aria-pressed="false" aria-label="Koyu mod" title="Koyu / açık mod">
+      <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+      <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></g></svg>
+    </button>
   </div>
 </header>
 <script>
+  // Koyu / açık mod: tercih localStorage 'tema' anahtarında
+  const tt = document.querySelector<HTMLButtonElement>('.theme-toggle');
+  const syncTheme = () => tt?.setAttribute('aria-pressed', String(document.documentElement.dataset.theme === 'dark'));
+  syncTheme();
+  tt?.addEventListener('click', () => {
+    const dark = document.documentElement.dataset.theme !== 'dark';
+    document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+    try { localStorage.setItem('tema', dark ? 'dark' : 'light'); } catch (e) {}
+    syncTheme();
+  });
   const btn = document.querySelector<HTMLButtonElement>('.menu-toggle');
   const menu = document.getElementById('ana-menu');
   btn?.addEventListener('click', () => {
