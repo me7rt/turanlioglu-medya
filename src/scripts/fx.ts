@@ -345,7 +345,7 @@ export function explorer(root: HTMLElement | null) {
   root.addEventListener('pointerleave', () => { hovering = false; });
   // Kaydırınca sıradaki hizmete geçer (ekranı tutmaz) + bölüm görünürken kendiliğinden de sırayla değişir.
   // Alttaki çizgi bir sonraki geçişe kalan süreyi gösterir. Üzerine gelince/odakta bekler.
-  const AUTO = 4; // sn
+  const AUTO = 2; // sn
   let inView = false, scrollIdx = -1;
   const timer = { p: 0 };
   let tw: gsap.core.Tween | null = null;
