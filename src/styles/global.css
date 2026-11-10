@@ -389,10 +389,10 @@ body::after {
 .on-dark .badge .badge-core, .badge--light .badge-core { background: var(--petrol); color: var(--turkuaz); }
 
 /* Kemer (arch) görsel */
-.arch .img-frame, .arch.img-frame { border-radius: 999px 999px 14px 14px; }
+.arch .img-frame, .arch.img-frame { border-radius: 999px; }
 .blob { position: relative; isolation: isolate; }
 .blob::before {
-  content: ''; position: absolute; inset: 8% -6% -6% 8%; z-index: -1; border-radius: 999px 999px 18px 18px;
+  content: ''; position: absolute; inset: 8% -6% -6% 8%; z-index: -1; border-radius: 999px;
   background: var(--turkuaz);
 }
 

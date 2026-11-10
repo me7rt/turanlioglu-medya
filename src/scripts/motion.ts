@@ -121,7 +121,7 @@ function reveals() {
   gsap.utils.toArray<HTMLElement>('[data-curtain]').forEach((el) => {
     const img = el.querySelector('img');
     gsap.fromTo(el, { clipPath: 'inset(18% 10% 18% 10% round 24px)' }, {
-      clipPath: 'inset(0% 0% 0% 0% round 4px)', duration: 1.4, ease: 'expo.out',
+      clipPath: 'inset(0% 0% 0% 0% round 4px)', duration: 1.4, ease: 'expo.out', clearProps: 'clipPath',
       scrollTrigger: { trigger: el, start: REVEAL_START, once: true },
     });
     if (img) gsap.fromTo(img, { scale: 1.25 }, { scale: 1, duration: 1.6, ease: 'expo.out', scrollTrigger: { trigger: el, start: REVEAL_START, once: true } });
