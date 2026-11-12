@@ -34,8 +34,8 @@ const schema = [{
 }];
 const title = `${s.name} | ${site.city} | ${site.name}`;
 ---
-<Base title={title} description={s.short.length > 160 ? s.short.slice(0, 157) + '…' : s.short} crumbs={[{ name: 'Hizmetler', path: '/hizmetler/' }, { name: s.name, path }]} schema={schema} top="turkuaz">
-  <PageHero tone="turkuaz" title={s.name} lead={s.short}>
+<Base title={title} description={s.short.length > 160 ? s.short.slice(0, 157) + '…' : s.short} crumbs={[{ name: 'Hizmetler', path: '/hizmetler/' }, { name: s.name, path }]} schema={schema} top="dark">
+  <PageHero tone="dark" title={s.name} lead={s.short}>
     <a class="btn" data-intro href={url('/iletisim/')}>Bu hizmet için ön görüşme planla</a>
     <div slot="side" class="svc-hero-media">
       <div class="arch svc-arch"><Img name={s.image} eager sizes="(min-width: 900px) 34vw, 100vw" ratio="4/5" /></div>
@@ -70,7 +70,7 @@ const title = `${s.name} | ${site.city} | ${site.name}`;
 </Base>
 <style>
   .svc-hero-media { position: relative; width: clamp(260px, 30vw, 440px); margin-bottom: calc(-1 * clamp(4.5rem, 3rem + 6vw, 9rem)); align-self: end; }
-  .svc-arch :global(.img-frame) { box-shadow: 0 0 0 10px rgb(255 255 255 / 0.35); }
+  .svc-arch :global(.img-frame) { box-shadow: 0 0 0 10px rgb(64 224 208 / 0.3); }
   .svc-hero-media :global(.svc-badge) { position: absolute; left: -2.5rem; bottom: 12%; }
   :global(.page-hero) .btn { margin-top: 1rem; }
   .svc-body { display: grid; grid-template-columns: 1.5fr 1fr; gap: clamp(2rem, 6vw, 6rem); }

@@ -14,7 +14,7 @@
   --turkuaz-100: #c9f4ee;  /* vurgu kutusu zemini */
   --turkuaz-700: #1b6f67;  /* açık zeminde turkuaz metin ve link */
   --turkuaz-800: #14524c;  /* hover / daha güçlü vurgu */
-  --petrol: #062a2d;       /* metin ve koyu zemin */
+  --petrol: #05282b;       /* KURUMSAL ANA RENK (Mert, 2026-11-12): koyu petrol. Metin ve koyu zemin */
   --petrol-2: #0d3f43;
   --kagit: #f1f7f6;        /* serin kâğıt beyazı (zemin) */
   --beyaz: #ffffff;
@@ -189,7 +189,8 @@ p { margin: 0 0 1em; max-width: 68ch; text-wrap: pretty; }
 .prose code { background: var(--turkuaz-50); padding: 0.1em 0.35em; border-radius: 3px; font-size: 0.92em; }
 
 /* ---------- CTA bandı ---------- */
-.cta-band { background: var(--turkuaz); }
+.cta-band { background: var(--petrol); color: #c9e2df; }
+.cta-band h2 { color: #f4fcfb; }
 .cta-band .wrap { display: grid; grid-template-columns: 1.4fr 1fr; gap: 2rem; align-items: end; }
 .cta-band h2 { font-size: var(--fs-4); margin: 0; font-variation-settings: 'wdth' var(--wdth, 92); }
 .cta-band p { font-size: var(--fs-1); }
@@ -315,13 +316,16 @@ h1.loose .w { overflow: visible; }
   background: var(--yuzey); box-shadow: 0 0 0 2px var(--petrol);
 }
 .steps.hscroll > li::before { display: none; }
-.steps.hscroll > li:nth-child(4n+1) { background: var(--turkuaz); }
+.steps.hscroll > li:nth-child(4n+1) { background: var(--petrol-2); color: #d7ecea; }
+.steps.hscroll > li:nth-child(4n+1) h3 { color: var(--beyaz); }
+.steps.hscroll > li:nth-child(4n+1) .step-no, .steps.hscroll > li:nth-child(4n+1) .step-ic { color: var(--turkuaz); }
 .steps.hscroll > li:nth-child(4n+2) { background: var(--petrol); color: #d7ecea; }
 .steps.hscroll > li:nth-child(4n+2) h3 { color: var(--beyaz); }
 .steps.hscroll > li:nth-child(4n+2) p { color: #b9d6d3; }
 .steps.hscroll > li:nth-child(4n+2) .step-no { color: var(--turkuaz); }
 .steps.hscroll > li:nth-child(4n+3) { background: var(--turkuaz-100); }
-.steps.hscroll > li:nth-child(4n+1) p, .steps.hscroll > li:nth-child(4n+3) p { color: var(--petrol); }
+.steps.hscroll > li:nth-child(4n+1) p { color: #b9d6d3; }
+.steps.hscroll > li:nth-child(4n+3) p { color: var(--petrol); }
 .steps.hscroll .step-no { font-size: clamp(4rem, 2.5rem + 4vw, 7rem); margin-bottom: auto; }
 .steps.hscroll > li h3 { font-size: var(--fs-2); margin-top: 1rem; }
 .steps.hscroll > li p { font-size: var(--fs-1); max-width: 30ch; }
@@ -470,7 +474,7 @@ html[data-theme='dark'] {
   --turkuaz-800: #8ff0e5;
 }
 /* Turkuaz zeminli alanlar koyu modda da aynı kalır: içlerinde metin koyu petrol */
-html[data-theme='dark'] :is(.summary, .on-turkuaz, .page-hero--turkuaz, .crumbs-bar--turkuaz, .steps.hscroll > li:nth-child(4n+1), .btn--turkuaz) {
+html[data-theme='dark'] :is(.on-turkuaz, .page-hero--turkuaz, .crumbs-bar--turkuaz, .btn--turkuaz) {
   --ink: var(--petrol); --gri: #48615f; --turkuaz-700: #1b6f67; --turkuaz-800: #14524c; --cizgi: rgb(6 42 45 / 0.14);
   color: var(--ink);
 }
@@ -491,3 +495,8 @@ html[data-theme='dark'] .btn:not(.btn--turkuaz):not(.btn--ghost) { border-color:
 html[data-theme='dark'] .theme-toggle .sun { display: block; }
 html[data-theme='dark'] .theme-toggle .moon { display: none; }
 .motion .theme-toggle:active svg { transform: rotate(-40deg) scale(0.85); }
+
+/* Koyu petrol zeminlerde ana düğme turkuaz vurgu olur */
+:is(.on-dark, .page-hero) .btn:not(.btn--ghost) { background: var(--turkuaz); border-color: var(--turkuaz); color: var(--petrol); }
+:is(.on-dark, .page-hero) .btn:not(.btn--ghost):hover { color: var(--petrol); }
+:is(.on-dark, .page-hero) .btn--ghost { --ink: #e3f3f1; }

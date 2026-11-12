@@ -8,14 +8,14 @@ const {
   text = 'İşletmenizi ve hedefinizi dinleyelim, size özel bir yol haritası çıkaralım. Ön görüşme ücretsizdir.',
 } = Astro.props;
 ---
-<section class="cta-band section on-turkuaz" aria-labelledby="cta-baslik">
-  <Arcs class="cta-arcs" tone="dark" />
+<section class="cta-band section on-dark" aria-labelledby="cta-baslik">
+  <Arcs class="cta-arcs" tone="light" />
   <div class="wrap">
     <h2 id="cta-baslik" data-stretch>{title}</h2>
     <div class="cta-side" data-reveal>
       <p>{text}</p>
       <div class="cta-actions">
-        <a class="btn" href={url('/iletisim/')}>Ücretsiz ön görüşme planla</a>
+        <a class="btn btn--turkuaz" href={url('/iletisim/')}>Ücretsiz ön görüşme planla</a>
         <Badge />
       </div>
     </div>

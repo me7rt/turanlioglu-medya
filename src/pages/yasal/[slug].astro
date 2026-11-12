@@ -10,8 +10,8 @@ export function getStaticPaths() {
 }
 const { title } = Astro.props;
 ---
-<Base title={title} description={`Turanlıoğlu Medya ${title.toLocaleLowerCase('tr-TR')}. Kişisel verilerinizin nasıl işlendiği ve haklarınız hakkında bilgi.`} crumbs={[{ name: title, path: `/yasal/${Astro.params.slug}/` }]} noindex top="turkuaz">
-  <PageHero tone="turkuaz" compact title={title} />
+<Base title={title} description={`Turanlıoğlu Medya ${title.toLocaleLowerCase('tr-TR')}. Kişisel verilerinizin nasıl işlendiği ve haklarınız hakkında bilgi.`} crumbs={[{ name: title, path: `/yasal/${Astro.params.slug}/` }]} noindex top="dark">
+  <PageHero tone="dark" compact title={title} />
   <div class="wrap prose" style="padding-block:4rem 6rem">
     <p class="todo">[DOLDURULACAK: Bu metin bir hukukçu tarafından hazırlanmalı. Yayına almadan önce zorunlu — yönerge Bölüm 9 ve kontrol listesi madde 1–3.]</p>
   </div>
