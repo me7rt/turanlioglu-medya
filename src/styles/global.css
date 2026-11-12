@@ -470,7 +470,7 @@ html[data-theme='dark'] {
   --turkuaz-800: #8ff0e5;
 }
 /* Turkuaz zeminli alanlar koyu modda da aynı kalır: içlerinde metin koyu petrol */
-html[data-theme='dark'] :is(.hero-text, .summary, .on-turkuaz, .page-hero--turkuaz, .crumbs-bar--turkuaz, .steps.hscroll > li:nth-child(4n+1), .btn--turkuaz) {
+html[data-theme='dark'] :is(.summary, .on-turkuaz, .page-hero--turkuaz, .crumbs-bar--turkuaz, .steps.hscroll > li:nth-child(4n+1), .btn--turkuaz) {
   --ink: var(--petrol); --gri: #48615f; --turkuaz-700: #1b6f67; --turkuaz-800: #14524c; --cizgi: rgb(6 42 45 / 0.14);
   color: var(--ink);
 }

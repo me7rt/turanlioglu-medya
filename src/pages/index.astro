@@ -21,16 +21,16 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   title="Turanlıoğlu Medya | Sosyal medya, web ve dijital reklam ajansı"
   description="Turanlıoğlu Medya; sosyal medya yönetimi, web tasarım, dijital reklam, içerik üretimi ve SEO/GEO hizmetleri sunan İstanbul merkezli dijital ajanstır."
 >
-  <section class="hero" data-hero aria-labelledby="hero-baslik">
+  <section class="hero on-dark" data-hero aria-labelledby="hero-baslik">
     <HeroGallery />
     <div class="hero-veil" aria-hidden="true"></div>
-    <Arcs class="hero-arcs" tone="dark" />
+    <Arcs class="hero-arcs" tone="light" />
     <div class="wrap hero-grid">
       <div class="hero-text">
         <h1 id="hero-baslik">Markanızın sesi dijitalde daha uzağa ulaşsın.</h1>
         <p class="hero-lead" data-intro>{site.tagline} Sosyal medyadan web sitenize, reklamdan aramalara kadar tek bir plan, tek bir ekip.</p>
         <div class="hero-actions" data-intro>
-          <a class="btn" href={url('/iletisim/')}>Ücretsiz ön görüşme planla</a>
+          <a class="btn btn--turkuaz" href={url('/iletisim/')}>Ücretsiz ön görüşme planla</a>
           <a class="btn btn--ghost" href={url('/hizmetler/')}>Hizmetleri incele</a>
         </div>
         <a class="scroll-hint" href="#ne-yapiyoruz" data-intro data-scroll-hint>
@@ -167,11 +167,12 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 </Base>
 
 <style>
-  .hero { background: var(--turkuaz); overflow: hidden; isolation: isolate; }
+  /* Açılış koyu petrol zeminde; yazıların arkasında soldan sağa açılan petrol perde */
+  .hero { --ink: #e3f3f1; background: #05282b; color: var(--ink); overflow: hidden; isolation: isolate; }
   /* Yazıların arkasında soldan sağa açılan turkuaz perde: arkadan kayan görseller hafifçe seçilir */
   .hero-veil { position: absolute; inset: 0; z-index: 1; pointer-events: none;
-    background: linear-gradient(90deg, rgb(64 224 208 / 0.86) 0%, rgb(64 224 208 / 0.78) 32%, rgb(64 224 208 / 0.58) 48%, rgb(48 213 200 / 0.22) 66%, rgb(48 213 200 / 0) 82%); }
-  @media (max-width: 900px) { .hero-veil { background: linear-gradient(180deg, rgb(64 224 208 / 0.82), rgb(64 224 208 / 0.74) 70%, rgb(64 224 208 / 0.4)); } }
+    background: linear-gradient(90deg, rgb(5 40 43 / 0.92) 0%, rgb(5 40 43 / 0.84) 32%, rgb(5 40 43 / 0.62) 48%, rgb(5 40 43 / 0.25) 66%, rgb(5 40 43 / 0) 82%); }
+  @media (max-width: 900px) { .hero-veil { background: linear-gradient(180deg, rgb(5 40 43 / 0.86), rgb(5 40 43 / 0.78) 70%, rgb(5 40 43 / 0.45)); } }
   .hero :global(.hero-arcs) { left: -3%; bottom: 0; width: min(55vw, 560px); z-index: 1; }
   .hero-photo-wrap { position: relative; }
   .hero-badge-row { position: absolute; left: 0; right: 0; top: 0; display: flex; justify-content: flex-end; pointer-events: none; z-index: 2; }
@@ -183,7 +184,9 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .hero h1 { font-size: clamp(3rem, 1.4rem + 4.6vw, 6.4rem); line-height: 0.92; letter-spacing: -0.04em; margin-bottom: 0.4em; font-variation-settings: 'wdth' 85; }
   .hero-lead { font-size: var(--fs-1); max-width: 46ch; }
   .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
-  .hero .btn--ghost:hover { background: var(--petrol); }
+  .hero h1 { color: #f4fcfb; }
+  .hero-lead { color: #c9e2df; }
+  .hero .btn--ghost:hover { background: var(--turkuaz); border-color: var(--turkuaz); color: var(--petrol); }
 
   .hero-photo { position: relative; }
   .hero-photo :global(.img-frame) { border-radius: 0; }
